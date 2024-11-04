@@ -4,6 +4,7 @@ package in.theexplorers.quiz.repositories;
  */
 
 import in.theexplorers.quiz.entities.Option;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,6 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Repository
+@Tag(name = "Option Repository", description = "Repository for managing answer options for the quiz questions.")
 public interface OptionRepository extends JpaRepository<Option, Long> {
 }

@@ -4,6 +4,7 @@ package in.theexplorers.quiz.entities;
  */
 
 import in.theexplorers.quiz.entities.enums.UserRole;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -26,24 +27,29 @@ import java.util.Date;
 @Entity
 @Data
 @Builder
+@Schema(description = "Represents a user in the quiz application, including credentials, role, and status.")
 public class User {
+
     /**
      * It represents the unique id of every record.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier for each user record.")
     private Long id;
 
     /**
      * The unique username of the user.
      */
     @Column(nullable = false, unique = true)
+    @Schema(description = "The unique username of the user.", example = "john_doe")
     private String username;
 
     /**
      * The encrypted password for user authentication.
      */
     @Column(nullable = false)
+    @Schema(description = "The encrypted password for user authentication.")
     private String password;
 
     /**
@@ -51,23 +57,27 @@ public class User {
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Schema(description = "The role of the user (either ADMIN or USER).")
     private UserRole role;
 
     /**
      * Indicates whether the user account is active. Default is true.
      */
     @Builder.Default
+    @Schema(description = "Indicates whether the user account is active. Default is true.", defaultValue = "true")
     private Boolean isActive = true;
 
     /**
      * The username of the user who created this record.
      */
     @Column(nullable = false, updatable = false)
+    @Schema(description = "The username of the user who created this record.", example = "admin")
     private String createdBy;
 
     /**
      * The username of the user who last updated this record.
      */
+    @Schema(description = "The username of the user who last updated this record.", example = "admin")
     private String updatedBy;
 
     /**
@@ -76,6 +86,7 @@ public class User {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
+    @Schema(description = "The timestamp when the user record was created.")
     private Date createdDate;
 
     /**
@@ -83,5 +94,6 @@ public class User {
      */
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @Schema(description = "The timestamp when the user record was last updated.")
     private Date updatedDate;
 }

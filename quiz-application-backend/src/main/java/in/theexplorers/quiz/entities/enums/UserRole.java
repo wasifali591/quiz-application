@@ -1,8 +1,9 @@
 package in.theexplorers.quiz.entities.enums;
-
 /*
  * Copyright (c) 2024 TheExplorers.
  */
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Enum representing the roles of users in the quiz application.
@@ -19,14 +20,17 @@ package in.theexplorers.quiz.entities.enums;
  * @version 1.0.0
  * @since 1.0.0
  */
+@Schema(description = "Represents the roles of users in the quiz application.")
 public enum UserRole {
     /**
      * Represents an admin user with management privileges.
      */
+    @Schema(description = "Represents an admin user with management privileges.")
     ADMIN,
 
     /**
      * Represents a regular user participating in quizzes.
      */
+    @Schema(description = "Represents a regular user participating in quizzes.")
     USER
 }
