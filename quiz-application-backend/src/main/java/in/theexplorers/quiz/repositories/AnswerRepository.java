@@ -4,9 +4,11 @@ package in.theexplorers.quiz.repositories;
  */
 
 import in.theexplorers.quiz.entities.Answer;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * This is a repository interface which provides CRUD operations for {@link Answer}.
@@ -19,6 +21,12 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Repository
-@Tag(name = "Answer Repository", description = "Repository for managing user answers to quiz questions.")
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
+    /**
+     * Find all active {@link Answer} entity.
+     *
+     * @return list of business.
+     */
+    @Query("SELECT a from Answer a where a.isActive=true")
+    List<Answer> findAllActive();
 }

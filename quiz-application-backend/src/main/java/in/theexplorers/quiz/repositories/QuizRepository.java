@@ -4,7 +4,6 @@ package in.theexplorers.quiz.repositories;
  */
 
 import in.theexplorers.quiz.entities.Quiz;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +15,5 @@ import org.springframework.stereotype.Repository;
  * @since 1.0.0
  */
 @Repository
-@Tag(name = "Quiz Repository", description = "Repository for managing quiz.")
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
 }
