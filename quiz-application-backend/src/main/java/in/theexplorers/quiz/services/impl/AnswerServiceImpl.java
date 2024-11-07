@@ -8,7 +8,10 @@ import in.theexplorers.quiz.entities.Answer;
 import in.theexplorers.quiz.exceptions.ResourceNotFoundException;
 import in.theexplorers.quiz.repositories.AnswerRepository;
 import in.theexplorers.quiz.services.AnswerService;
+import in.theexplorers.quiz.utilities.StringConstants;
 import in.theexplorers.quiz.utilities.converters.AnswerConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AnswerServiceImpl implements AnswerService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final AnswerRepository answerRepository;
     private final AnswerConverter answerConverter;
@@ -45,13 +49,28 @@ public class AnswerServiceImpl implements AnswerService {
     /**
      * Retrieves an answer by its unique ID.
      *
+     * <p>This method fetches an {@link Answer} entity based on the provided ID from the repository.
+     * If found, it maps the entity to an {@link AnswerDto} and returns it.
+     *
      * @param id the ID of the answer to retrieve
-     * @return an {@link Optional} containing the {@link AnswerDto} if found, or empty if not
+     * @return an {@link AnswerDto} if the answer is found
      */
     @Override
-    public Optional<AnswerDto> getById(Long id) {
-        Optional<Answer> answer = answerRepository.findById(id);
-        return answer.map(answerConverter::answerToAnswerDto);
+    public AnswerDto getById(Long id) {
+        logger.debug(StringConstants.METHOD_START, "getById");
+
+        Optional<Answer> answerOptional = answerRepository.findById(id);
+        Answer answer = answerOptional.orElseThrow(() -> {
+            logger.warn(StringConstants.RECORDS_NOT_FOUND);
+            return new ResourceNotFoundException(StringConstants.RECORDS_NOT_FOUND);
+        });
+
+        AnswerDto answerDto = answerConverter.answerToAnswerDto(answer);
+        logger.debug(StringConstants.RECORDS_RETRIEVED, answerDto);
+
+        logger.debug(StringConstants.METHOD_END, "getById");
+
+        return answerDto;
     }
 
     /**
@@ -61,19 +80,27 @@ public class AnswerServiceImpl implements AnswerService {
      */
     @Override
     public List<AnswerDto> getAll(Boolean isActive) {
-        List<Answer> answerList;
-        if (Boolean.TRUE.equals(isActive)) {
-            answerList = answerRepository.findAllActive();
-        } else {
-            answerList = answerRepository.findAll();
-        }
+        logger.info(StringConstants.METHOD_START, "getAll");
+
+        // Determine which retrieval method to call based on isActive
+        List<Answer> answerList = Boolean.TRUE.equals(isActive)
+                ? answerRepository.findAllActive()
+                : answerRepository.findAll();
+
         if (answerList.isEmpty()) {
-            throw new ResourceNotFoundException("No data available!");
+            logger.warn(StringConstants.RECORDS_NOT_FOUND);
+            throw new ResourceNotFoundException(StringConstants.RECORDS_NOT_FOUND);
         }
-        return answerList.stream()
+
+        logger.debug(StringConstants.RECORDS_RETRIEVED, answerList);
+        List<AnswerDto> answerDtos = answerList.stream()
                 .map(answerConverter::answerToAnswerDto)
                 .collect(Collectors.toList());
+
+        logger.info(StringConstants.METHOD_END, "getAll");
+        return answerDtos;
     }
+
 
     /**
      * Adds a new answer.
@@ -83,14 +110,21 @@ public class AnswerServiceImpl implements AnswerService {
      */
     @Override
     public AnswerDto add(AnswerDto answerDto) {
+        logger.info(StringConstants.METHOD_START, "add");
+
         // Convert the AnswerDto to an Answer entity
         Answer answer = answerConverter.answerDtoToAnswer(answerDto);
 
-        // Save the answer entity and convert the saved entity to AnswerDto
+        // Save the answer entity
+        logger.debug(StringConstants.RECORDS_TO_SAVE, answer);
         Answer savedAnswer = answerRepository.save(answer);
+        logger.info(StringConstants.RECORDS_SAVED);
 
-        // Convert and return the saved Answer entity as AnswerDto
-        return answerConverter.answerToAnswerDto(savedAnswer);
+        // Convert the saved entity back to AnswerDto and return
+        AnswerDto savedAnswerDto = answerConverter.answerToAnswerDto(savedAnswer);
+
+        logger.info(StringConstants.METHOD_END, "add");
+        return savedAnswerDto;
     }
 
 
@@ -101,11 +135,22 @@ public class AnswerServiceImpl implements AnswerService {
      */
     @Override
     public void delete(Long id) {
-        Optional<Answer> answer = answerRepository.findById(id);
-        answer.ifPresent(a -> {
-            a.setIsActive(false); // Mark the answer as inactive instead of deleting it
-            answerRepository.save(a); // Save the updated answer
-        });
+        logger.info(StringConstants.METHOD_START, "delete");
+
+        // Retrieve the answer by ID
+        Answer answer = answerRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.warn(StringConstants.RECORDS_NOT_FOUND);
+                    return new ResourceNotFoundException(StringConstants.RECORDS_NOT_FOUND);
+                });
+
+        // Mark the answer as inactive and save it
+        answer.setIsActive(false);
+        logger.debug(StringConstants.RECORDS_TO_DELETE, answer);
+        answerRepository.save(answer);
+        logger.info(StringConstants.RECORDS_DELETED);
+
+        logger.info(StringConstants.METHOD_END, "delete");
     }
 
     /**
@@ -117,19 +162,27 @@ public class AnswerServiceImpl implements AnswerService {
      */
     @Override
     public AnswerDto update(Long id, AnswerDto answerDto) {
-        Optional<Answer> existingAnswerOpt = answerRepository.findById(id);
-        if (existingAnswerOpt.isPresent()) {
-            Answer existingAnswer = existingAnswerOpt.get();
-            // Map only updated fields from the DTO to the existing entity
-            existingAnswer.setSelectedAnswer(answerDto.getSelectedAnswer());
-            existingAnswer.setIsActive(answerDto.getIsActive());
+        logger.info(StringConstants.METHOD_START, "update");
 
-            // Save the updated entity back to the repository
-            Answer updatedAnswer = answerRepository.save(existingAnswer);
+        // Retrieve the answer by ID
+        Answer existingAnswer = answerRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.warn(StringConstants.RECORDS_NOT_FOUND);
+                    return new ResourceNotFoundException(StringConstants.RECORDS_NOT_FOUND);
+                });
 
-            // Return the updated DTO
-            return answerConverter.answerToAnswerDto(updatedAnswer);
-        }
-        return null; // Or throw an exception based on your business logic
+        // Update the existing answer with fields from the DTO
+        answerConverter.toUpdateAnswer(answerDto, existingAnswer);
+
+        // Save the updated answer and convert it to DTO
+        logger.debug(StringConstants.RECORDS_TO_UPDATE, existingAnswer);
+        Answer updatedAnswer = answerRepository.save(existingAnswer);
+        logger.info((StringConstants.RECORDS_UPDATED));
+
+        AnswerDto updatedAnswerDto = answerConverter.answerToAnswerDto(updatedAnswer);
+
+        logger.info(StringConstants.METHOD_END, "update");
+
+        return updatedAnswerDto;
     }
 }

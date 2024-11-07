@@ -7,7 +7,6 @@ import in.theexplorers.quiz.dtos.common.AnswerDto;
 import in.theexplorers.quiz.entities.Answer;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Service interface for managing {@link Answer} entities in the quiz application.
@@ -33,10 +32,13 @@ public interface AnswerService {
     /**
      * Retrieves an answer by its unique ID.
      *
+     * <p>This method fetches an {@link Answer} entity based on the provided ID from the repository.
+     * If found, it maps the entity to an {@link AnswerDto} and returns it.
+     *
      * @param id the ID of the answer to retrieve
-     * @return an {@link Optional} containing the {@link AnswerDto} if found, or empty if not
+     * @return an {@link AnswerDto} if the answer is found
      */
-    Optional<AnswerDto> getById(Long id);
+    AnswerDto getById(Long id);
 
     /**
      * Retrieves all answers in the system.
