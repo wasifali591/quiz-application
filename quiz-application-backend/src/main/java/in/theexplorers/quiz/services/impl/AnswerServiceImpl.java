@@ -52,14 +52,21 @@ public class AnswerServiceImpl implements AnswerService {
      * <p>This method fetches an {@link Answer} entity based on the provided ID from the repository.
      * If found, it maps the entity to an {@link AnswerDto} and returns it.
      *
-     * @param id the ID of the answer to retrieve
+     * @param id       the ID of the answer to retrieve
+     * @param isActive isActive true or false to get active or inactive answer
      * @return an {@link AnswerDto} if the answer is found
      */
     @Override
-    public AnswerDto getById(Long id) {
+    public AnswerDto getById(Long id, Boolean isActive) {
         logger.debug(StringConstants.METHOD_START, "getById");
 
-        Optional<Answer> answerOptional = answerRepository.findById(id);
+        Optional<Answer> answerOptional;
+        if (Boolean.TRUE.equals(isActive)) {
+            answerOptional = answerRepository.findActiveById(id);
+        } else {
+            answerOptional = answerRepository.findById(id);
+        }
+
         Answer answer = answerOptional.orElseThrow(() -> {
             logger.warn(StringConstants.RECORDS_NOT_FOUND);
             return new ResourceNotFoundException(StringConstants.RECORDS_NOT_FOUND);
@@ -72,6 +79,7 @@ public class AnswerServiceImpl implements AnswerService {
 
         return answerDto;
     }
+
 
     /**
      * Retrieves all answers as a list of {@link AnswerDto}.

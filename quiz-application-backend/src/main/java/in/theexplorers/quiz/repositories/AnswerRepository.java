@@ -6,9 +6,11 @@ package in.theexplorers.quiz.repositories;
 import in.theexplorers.quiz.entities.Answer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This is a repository interface which provides CRUD operations for {@link Answer}.
@@ -29,4 +31,13 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
      */
     @Query("SELECT a from Answer a where a.isActive=true")
     List<Answer> findAllActive();
+
+    /**
+     * Find active {@link Answer} entity by id.
+     *
+     * @param id - id to find entity. Must not be null.
+     * @return Optional
+     */
+    @Query("SELECT a from Answer a where a.id=:id AND a.isActive=true")
+    Optional<Answer> findActiveById(@Param("id") Long id);
 }

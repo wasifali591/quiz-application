@@ -35,14 +35,16 @@ public interface AnswerService {
      * <p>This method fetches an {@link Answer} entity based on the provided ID from the repository.
      * If found, it maps the entity to an {@link AnswerDto} and returns it.
      *
-     * @param id the ID of the answer to retrieve
+     * @param id       the ID of the answer to retrieve
+     * @param isActive isActive true or false to get active or inactive answer
      * @return an {@link AnswerDto} if the answer is found
      */
-    AnswerDto getById(Long id);
+    AnswerDto getById(Long id, Boolean isActive);
 
     /**
      * Retrieves all answers in the system.
      *
+     * @param isActive true or false to get active or inactive answer
      * @return a list of all answers as {@link AnswerDto} objects
      */
     List<AnswerDto> getAll(Boolean isActive);

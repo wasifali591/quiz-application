@@ -52,6 +52,13 @@ public class Option {
     private Question question;
 
     /**
+     * Flag indicating if this option is the correct answer.
+     */
+    @Column(nullable = false)
+    @Schema(description = "Flag indicating if this option is the correct answer", example = "true")
+    private Boolean isCorrect = false;
+
+    /**
      * Indicates whether the option is active. Default is true.
      */
     @Builder.Default

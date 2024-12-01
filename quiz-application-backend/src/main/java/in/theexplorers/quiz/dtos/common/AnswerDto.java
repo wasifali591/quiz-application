@@ -4,9 +4,8 @@ package in.theexplorers.quiz.dtos.common;
  */
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * DTO representing an answer in the quiz application.
@@ -24,26 +23,15 @@ import lombok.NoArgsConstructor;
  * @since 1.0.0
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Schema(description = "Data Transfer Object for representing an answer in the quiz application.")
 public class AnswerDto {
-
-    /**
-     * Unique identifier for each answer record.
-     */
-    @Schema(description = "Unique identifier for the answer", example = "1")
     private Long id;
-
-    /**
-     * The option selected by the user as their answer.
-     */
-    @Schema(description = "The option selected by the user as their answer", example = "Option A")
+    private Long questionId;
+    private Long userId;
     private String selectedAnswer;
-
-    /**
-     * Indicates whether the answer record is active.
-     */
-    @Schema(description = "Indicates whether the answer is active", example = "true", defaultValue = "true")
     private Boolean isActive;
+    private String createdBy;
+    private String updatedBy;
 }
+
