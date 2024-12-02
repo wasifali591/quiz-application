@@ -39,11 +39,18 @@ public class User {
     private Long id;
 
     /**
-     * The unique username of the user.
+     * The name of the user.
+     */
+    @Column(nullable = false)
+    @Schema(description = "The name of the user.", example = "john doe")
+    private String name;
+
+    /**
+     * The unique email of the user.
      */
     @Column(nullable = false, unique = true)
-    @Schema(description = "The unique username of the user.", example = "john_doe")
-    private String username;
+    @Schema(description = "The unique email of the user.", example = "johndoe@mail.com")
+    private String email;
 
     /**
      * The encrypted password for user authentication.

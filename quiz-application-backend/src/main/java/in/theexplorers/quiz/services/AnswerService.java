@@ -28,48 +28,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public interface AnswerService {
+    AnswerDto submitAnswer(AnswerDto answerDto);
 
-    /**
-     * Retrieves an answer by its unique ID.
-     *
-     * <p>This method fetches an {@link Answer} entity based on the provided ID from the repository.
-     * If found, it maps the entity to an {@link AnswerDto} and returns it.
-     *
-     * @param id       the ID of the answer to retrieve
-     * @param isActive isActive true or false to get active or inactive answer
-     * @return an {@link AnswerDto} if the answer is found
-     */
-    AnswerDto getById(Long id, Boolean isActive);
-
-    /**
-     * Retrieves all answers in the system.
-     *
-     * @param isActive true or false to get active or inactive answer
-     * @return a list of all answers as {@link AnswerDto} objects
-     */
-    List<AnswerDto> getAll(Boolean isActive);
-
-    /**
-     * Adds a new answer.
-     *
-     * @param answerDto the data transfer object containing details of the answer to add
-     * @return the saved answer as an {@link AnswerDto}
-     */
-    AnswerDto add(AnswerDto answerDto);
-
-    /**
-     * Deletes an answer by its unique ID.
-     *
-     * @param id the ID of the answer to delete
-     */
-    void delete(Long id);
-
-    /**
-     * Updates an existing answer.
-     *
-     * @param id        the ID of the answer to update
-     * @param answerDto the data transfer object containing updated details of the answer
-     * @return the updated answer as an {@link AnswerDto}
-     */
-    AnswerDto update(Long id, AnswerDto answerDto);
+    List<AnswerDto> getAnswersByUserIdAndQuizId(Long userId, Long quizId);
 }

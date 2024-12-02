@@ -46,6 +46,13 @@ public class Quiz {
     private String title;
 
     /**
+     * The description of the quiz.
+     */
+    @Column(nullable = false)
+    @Schema(description = "The description of the quiz.", example = "General Knowledge Quiz")
+    private String description;
+
+    /**
      * The scheduled start time of the quiz.
      */
     @Column(nullable = false)
