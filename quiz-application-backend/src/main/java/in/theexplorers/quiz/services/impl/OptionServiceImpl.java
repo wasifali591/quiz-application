@@ -32,7 +32,7 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public OptionDto createOption(Long questionId, OptionDto optionDto) {
+    public OptionDto addOption(Long questionId, OptionDto optionDto) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
 
@@ -44,7 +44,7 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public void deleteOption(Long optionId) {
+    public void deleteOptionById(Long optionId) {
         optionRepository.deleteById(optionId);
     }
 }

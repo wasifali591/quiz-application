@@ -7,8 +7,8 @@ import java.util.List;
 public interface OptionService {
     List<OptionDto> getOptionsByQuestionId(Long questionId);
 
-    OptionDto createOption(Long questionId, OptionDto optionDto);
+    OptionDto addOption(Long questionId, OptionDto optionDto);
 
-    void deleteOption(Long optionId);
+    void deleteOptionById(Long optionId);
 }
 
