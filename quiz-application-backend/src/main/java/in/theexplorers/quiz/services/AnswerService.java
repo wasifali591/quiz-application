@@ -31,4 +31,35 @@ public interface AnswerService {
     AnswerDto submitAnswer(AnswerDto answerDto);
 
     List<AnswerDto> getAnswersByUserIdAndQuizId(Long userId, Long quizId);
+
+    /**
+     * Retrieves all answers from the database.
+     *
+     * @return A list of AnswerDto objects representing all answers.
+     */
+    List<AnswerDto> getAllAnswers();
+
+    /**
+     * Retrieves an answer by its ID.
+     *
+     * @param id The ID of the answer to retrieve.
+     * @return An AnswerDto object representing the requested answer.
+     */
+    AnswerDto getAnswerById(Long id);
+
+    /**
+     * Updates an existing answer with the provided details.
+     *
+     * @param id        The ID of the answer to update.
+     * @param answerDto The AnswerDto object containing the updated details.
+     * @return An AnswerDto object representing the updated answer.
+     */
+    AnswerDto updateAnswer(Long id, AnswerDto answerDto);
+
+    /**
+     * Soft deletes an answer by setting its isActive flag to false.
+     *
+     * @param id The ID of the answer to delete.
+     */
+    void deleteAnswer(Long id);
 }

@@ -63,5 +63,89 @@ public class AnswerServiceImpl implements AnswerService {
                 .map(answerConverter::answerToAnswerDto)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Retrieves all answers from the database.
+     *
+     * @return A list of AnswerDto objects representing all answers.
+     * @throws ResourceNotFoundException if no answers are found in the database.
+     */
+    @Override
+    public List<AnswerDto> getAllAnswers() {
+        // Fetch all Answer entities from the database
+        List<Answer> answers = answerRepository.findAll();
+
+        // Check if no answers were found and throw a custom exception
+        if (answers.isEmpty()) {
+            throw new ResourceNotFoundException("No answers found in the database.");
+        }
+
+        // Convert each Answer entity to its corresponding DTO using the converter
+        return answers.stream()
+                .map(answerConverter::answerToAnswerDto) // Convert Answer -> AnswerDto
+                .collect(Collectors.toList()); // Collect all DTOs into a list
+    }
+
+    /**
+     * Retrieves an answer by its ID.
+     *
+     * @param id The ID of the answer to retrieve.
+     * @return An AnswerDto object representing the requested answer.
+     * @throws ResourceNotFoundException if no answer with the specified ID is found.
+     */
+    @Override
+    public AnswerDto getAnswerById(Long id) {
+        // Retrieve the Answer entity by ID from the repository
+        Answer answer = answerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Answer with ID " + id + " not found."));
+
+        // Convert the retrieved entity to an AnswerDto and return it
+        return answerConverter.answerToAnswerDto(answer);
+    }
+
+    /**
+     * Updates an existing answer with the provided details.
+     *
+     * @param id        The ID of the answer to update.
+     * @param answerDto The AnswerDto object containing the updated details.
+     * @return An AnswerDto object representing the updated answer.
+     * @throws ResourceNotFoundException if the answer with the specified ID does not exist.
+     */
+    @Override
+    public AnswerDto updateAnswer(Long id, AnswerDto answerDto) {
+        // Retrieve the existing answer entity by ID from the repository
+        Answer existingAnswer = answerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Answer with ID " + id + " not found."));
+
+        // Update the fields of the existing answer entity using the provided DTO
+        existingAnswer.setSelectedAnswer(answerDto.getSelectedAnswer());
+        existingAnswer.setIsActive(answerDto.getIsActive());
+
+        // Save the updated entity back to the repository
+        Answer updatedAnswer = answerRepository.save(existingAnswer);
+
+        // Convert the updated entity to a DTO and return it
+        return answerConverter.answerToAnswerDto(updatedAnswer);
+    }
+
+    /**
+     * Soft deletes an answer by setting its isActive flag to false.
+     *
+     * @param id The ID of the answer to delete.
+     * @throws ResourceNotFoundException if the answer with the specified ID does not exist.
+     */
+    @Override
+    public void deleteAnswer(Long id) {
+        // Retrieve the existing answer entity by ID from the repository
+        Answer answer = answerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Answer with ID " + id + " not found."));
+
+        // Set the isActive flag to false for soft delete
+        answer.setIsActive(false);
+
+        // Save the updated entity back to the repository
+        answerRepository.save(answer);
+    }
+
 }
 

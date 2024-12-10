@@ -8,183 +8,115 @@ import in.theexplorers.quiz.dtos.response.ApiResponseDto;
 import in.theexplorers.quiz.services.AnswerService;
 import in.theexplorers.quiz.utilities.StringConstants;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * REST Controller for managing {@link AnswerDto} entities.
- *
- * <p>This controller provides endpoints to add, update, delete, and retrieve answer records.
- * It uses {@link AnswerService} to handle the business logic and return standardized API
- * responses using {@link ApiResponseDto}.</p>
- *
- * @author Wasif
- * @version 1.0.0
- * @since 1.0.0
- */
 @RestController
-@RequestMapping("quiz/api/answers")
+@RequestMapping("/api/answers")
+@Tag(name = "Answer Controller", description = "APIs for managing answers")
 public class AnswerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AnswerController.class);
-
     private final AnswerService answerService;
+    private final Logger logger = LoggerFactory.getLogger(AnswerController.class);
 
-    /**
-     * Constructor for {@link AnswerController}.
-     *
-     * @param answerService the service used to manage answer operations
-     */
     public AnswerController(AnswerService answerService) {
         this.answerService = answerService;
     }
 
     /**
-     * Retrieves all answers, optionally filtering by active status.
+     * Fetch all answers.
      *
-     * <p>This endpoint fetches all answers in the system. An optional {@code isActive} parameter
-     * can be provided to filter the answers based on their active status. If {@code isActive} is true,
-     * only active answers will be returned; if false, only inactive answers will be returned.
-     * If {@code isActive} is not specified, all active answers are retrieved by default.</p>
-     *
-     * @param isActive an optional Boolean flag for filtering answers by active status; if true, returns only active answers,
-     *                 if false, returns only inactive answers, and defaults to true if not specified.
-     * @return a {@link ResponseEntity} containing a list of {@link AnswerDto} objects if answers are found,
-     * or a status message if no answers are available.
+     * @return List of all AnswerDto objects.
      */
-    @Operation(
-            summary = "Retrieve all answers",
-            description = "Fetches all answers in the system, with an optional filter for active status."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Answers retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = AnswerDto.class))),
-            @ApiResponse(responseCode = "404", description = "No answers found", content = @Content)
-    })
+    @Operation(summary = "Get all answers", description = "Retrieve all answers from the system.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved all answers")
     @GetMapping
-    public ResponseEntity<Object> getAll(
-            @RequestParam(value = "isActive", required = false, defaultValue = "true") Boolean isActive) {
-
-        logger.info(StringConstants.METHOD_START, "getAll");
-
-        // Retrieve the list of answers based on active status
-        List<AnswerDto> answerList = answerService.getAll(isActive);
-
-        logger.info(StringConstants.METHOD_END, "getAll");
-
-        // Return the response with a success message and the list of answers
-        return new ApiResponseDto().generateResponse(HttpStatus.OK, answerList, "Answers retrieved successfully");
+    public ResponseEntity<ApiResponseDto> getAllAnswers() {
+        logger.info(StringConstants.METHOD_START, "getAllAnswers");
+        List<AnswerDto> answers = answerService.getAllAnswers();
+        logger.info(StringConstants.METHOD_END, "getAllAnswers");
+        return ApiResponseDto.generateResponse(
+                HttpStatus.OK, answers, "All answers retrieved successfully", LocalDateTime.now());
     }
 
-
     /**
-     * Retrieves an answer by its unique ID, with an option to filter by active status.
+     * Fetch an answer by its ID.
      *
-     * <p>This endpoint fetches a specific answer by its ID. It can also filter based on whether the answer
-     * is active or inactive, depending on the provided {@code isActive} parameter.</p>
-     *
-     * @param id       the unique identifier of the answer
-     * @param isActive an optional parameter (default is true) indicating whether to filter by active status;
-     *                 if true, only active answers are considered, otherwise all answers are considered
-     * @return a {@link ResponseEntity} containing the {@link AnswerDto} if the answer is found,
-     * or a not-found status if the answer is not found
+     * @param id Answer ID.
+     * @return AnswerDto object corresponding to the given ID.
      */
-    @Operation(summary = "Retrieve an answer by ID", description = "Fetches an answer by its unique ID, with an option to filter by active status.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Answer retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = AnswerDto.class))),
-            @ApiResponse(responseCode = "404", description = "Answer not found", content = @Content)
-    })
+    @Operation(summary = "Get an answer by ID", description = "Retrieve an answer using its ID.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the answer")
+    @ApiResponse(responseCode = "404", description = "Answer not found with the provided ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getById(
-            @PathVariable Long id,
-            @RequestParam(required = false, defaultValue = "true") Boolean isActive) {
-
-        logger.info(StringConstants.METHOD_START, "getById");
-
-        // Call the service to retrieve the answer by ID with active status filtering
-        AnswerDto answerDto = answerService.getById(id, isActive);
-
-        logger.info(StringConstants.METHOD_END, "getById");
-
-        // Return a standard API response containing the answer details
-        return new ApiResponseDto().generateResponse(HttpStatus.OK, answerDto, "Answer retrieved successfully");
+    public ResponseEntity<ApiResponseDto> getAnswerById(@PathVariable Long id) {
+        logger.info(StringConstants.METHOD_START, "getAnswerById");
+        AnswerDto answer = answerService.getAnswerById(id);
+        logger.info(StringConstants.METHOD_END, "getAnswerById");
+        return ApiResponseDto.generateResponse(
+                HttpStatus.OK, answer, "Answer retrieved successfully", LocalDateTime.now());
     }
 
-
     /**
-     * Adds a new answer to the database.
+     * Create a new answer.
      *
-     * <p>Delegates the creation logic to {@link AnswerService#add(AnswerDto)}.</p>
-     *
-     * @param answerDto the {@link AnswerDto} containing new answer information
-     * @return a {@link ResponseEntity} containing the created {@link AnswerDto} and a created status
+     * @param answerDto Answer data to be created.
+     * @return The created AnswerDto object.
      */
-    @Operation(summary = "Add a new answer", description = "Adds a new answer.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Answer created successfully",
-                    content = @Content(schema = @Schema(implementation = AnswerDto.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid input provided", content = @Content)
-    })
+    @Operation(summary = "Create a new answer", description = "Add a new answer to the system.")
+    @ApiResponse(responseCode = "201", description = "Successfully created the answer")
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody AnswerDto answerDto) {
-        logger.info(StringConstants.METHOD_START, "add");
-        AnswerDto savedAnswer = answerService.add(answerDto);
-        logger.info(StringConstants.METHOD_END, "add");
-        return new ApiResponseDto().generateResponse(HttpStatus.CREATED, savedAnswer, "Answer created successfully");
+    public ResponseEntity<ApiResponseDto> createAnswer(@RequestBody AnswerDto answerDto) {
+        logger.info(StringConstants.METHOD_START, "createAnswer");
+        AnswerDto createdAnswer = answerService.submitAnswer(answerDto);
+        logger.info(StringConstants.METHOD_END, "createAnswer");
+        return ApiResponseDto.generateResponse(
+                HttpStatus.CREATED, createdAnswer, "Answer created successfully", LocalDateTime.now());
     }
 
     /**
-     * Marks an answer as inactive instead of deleting it from the database.
+     * Update an existing answer by ID.
      *
-     * <p>Delegates the deletion logic to {@link AnswerService#delete(Long)}.</p>
-     *
-     * @param id the unique identifier of the answer to be marked as inactive
-     * @return a {@link ResponseEntity} with a success message and OK status
+     * @param id        Answer ID.
+     * @param answerDto Updated answer data.
+     * @return Updated AnswerDto object.
      */
-    @Operation(summary = "Delete an answer by ID", description = "Marks an answer as inactive instead of deleting.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Answer marked as inactive"),
-            @ApiResponse(responseCode = "404", description = "Answer not found", content = @Content)
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
-        logger.info(StringConstants.METHOD_START, "delete");
-        answerService.delete(id);
-        logger.info(StringConstants.METHOD_END, "delete");
-        return new ApiResponseDto().generateResponse(HttpStatus.OK, null, "Answer marked as inactive");
-    }
-
-    /**
-     * Updates an existing answer with new information.
-     *
-     * <p>Delegates the update logic to {@link AnswerService#update(Long, AnswerDto)}.</p>
-     *
-     * @param id        the unique identifier of the answer to update
-     * @param answerDto the {@link AnswerDto} containing updated answer information
-     * @return a {@link ResponseEntity} containing the updated {@link AnswerDto} and a success message
-     */
-    @Operation(summary = "Update an existing answer", description = "Updates an answer by its ID.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Answer updated successfully",
-                    content = @Content(schema = @Schema(implementation = AnswerDto.class))),
-            @ApiResponse(responseCode = "404", description = "Answer not found", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Invalid input provided", content = @Content)
-    })
+    @Operation(summary = "Update an answer", description = "Update an existing answer using its ID.")
+    @ApiResponse(responseCode = "200", description = "Successfully updated the answer")
+    @ApiResponse(responseCode = "404", description = "Answer not found with the provided ID")
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody AnswerDto answerDto) {
-        logger.info(StringConstants.METHOD_START, "update");
-        AnswerDto updatedAnswer = answerService.update(id, answerDto);
-        logger.info(StringConstants.METHOD_END, "update");
-        return new ApiResponseDto().generateResponse(HttpStatus.OK, updatedAnswer, "Answer updated successfully");
+    public ResponseEntity<ApiResponseDto> updateAnswer(@PathVariable Long id, @RequestBody AnswerDto answerDto) {
+        logger.info(StringConstants.METHOD_START, "updateAnswer");
+        AnswerDto updatedAnswer = answerService.updateAnswer(id, answerDto);
+        logger.info(StringConstants.METHOD_END, "updateAnswer");
+        return ApiResponseDto.generateResponse(
+                HttpStatus.OK, updatedAnswer, "Answer updated successfully", LocalDateTime.now());
+    }
+
+    /**
+     * Delete an answer by ID.
+     *
+     * @param id Answer ID.
+     * @return Confirmation message.
+     */
+    @Operation(summary = "Delete an answer", description = "Remove an answer from the system using its ID.")
+    @ApiResponse(responseCode = "200", description = "Successfully deleted the answer")
+    @ApiResponse(responseCode = "404", description = "Answer not found with the provided ID")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> deleteAnswer(@PathVariable Long id) {
+        logger.info(StringConstants.METHOD_START, "deleteAnswer");
+        answerService.deleteAnswer(id);
+        logger.info(StringConstants.METHOD_END, "deleteAnswer");
+        return ApiResponseDto.generateResponse(
+                HttpStatus.OK, null, "Answer deleted successfully", LocalDateTime.now());
     }
 }
+
