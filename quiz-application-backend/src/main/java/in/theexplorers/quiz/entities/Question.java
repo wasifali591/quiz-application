@@ -28,6 +28,7 @@ import java.util.List;
 @Data
 @Builder
 @Schema(description = "Represents the question of the  quiz")
+@Table(name = "question")
 public class Question {
 
     /**

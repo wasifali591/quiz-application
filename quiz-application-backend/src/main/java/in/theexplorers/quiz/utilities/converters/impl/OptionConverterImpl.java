@@ -4,7 +4,9 @@ import in.theexplorers.quiz.dtos.common.OptionDto;
 import in.theexplorers.quiz.entities.Option;
 import in.theexplorers.quiz.utilities.converters.OptionConverter;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OptionConverterImpl implements OptionConverter {
     private final ModelMapper modelMapper;
 

@@ -7,12 +7,14 @@ import in.theexplorers.quiz.exceptions.ResourceNotFoundException;
 import in.theexplorers.quiz.repositories.UserRepository;
 import in.theexplorers.quiz.services.UserService;
 import in.theexplorers.quiz.utilities.converters.UserConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;

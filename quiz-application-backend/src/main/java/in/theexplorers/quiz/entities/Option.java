@@ -15,7 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 
 /**
- * Entity representing an answer option for a question in a quiz.
+ * Entity representing options for a question in a quiz.
  *
  * <p>This entity stores the details of a specific answer option, including its text,
  * association with a question, and audit fields for tracking creation and updates.</p>
@@ -30,6 +30,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Represents an option for a quiz question")
+@Table(name = "option")
 public class Option {
 
     /**
@@ -66,6 +67,7 @@ public class Option {
      * Indicates whether the option is active. Default is true.
      */
     @Builder.Default
+    @Column(nullable = false)
     @Schema(description = "Indicates whether the option is active", defaultValue = "true", example = "true")
     private Boolean isActive = true;
 

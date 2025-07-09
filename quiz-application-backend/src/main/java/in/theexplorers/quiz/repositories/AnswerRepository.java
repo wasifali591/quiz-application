@@ -49,7 +49,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
      * @param quizId the ID of the quiz
      * @return a list of answers matching the given user and quiz IDs
      */
-    @Query("SELECT a FROM answer a JOIN question q ON a.question_id = q.id WHERE a.user_id = :userId AND q.quiz_id = :quizId")
+    @Query("SELECT a FROM Answer a WHERE a.user.id = :userId AND a.question.quiz.id = :quizId")
     List<Answer> findByUserIdAndQuizId(@Param("userId") Long userId, @Param("quizId") Long quizId);
 
     /**

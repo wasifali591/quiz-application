@@ -16,12 +16,14 @@ import in.theexplorers.quiz.services.QuizService;
 import in.theexplorers.quiz.utilities.converters.QuestionConverter;
 import in.theexplorers.quiz.utilities.converters.QuizConverter;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class QuizServiceImpl implements QuizService {
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;

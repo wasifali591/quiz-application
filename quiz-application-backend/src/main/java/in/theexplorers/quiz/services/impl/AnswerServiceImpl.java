@@ -13,6 +13,7 @@ import in.theexplorers.quiz.repositories.QuestionRepository;
 import in.theexplorers.quiz.repositories.UserRepository;
 import in.theexplorers.quiz.services.AnswerService;
 import in.theexplorers.quiz.utilities.converters.AnswerConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @Service
+@Slf4j
 public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository answerRepository;
     private final UserRepository userRepository;

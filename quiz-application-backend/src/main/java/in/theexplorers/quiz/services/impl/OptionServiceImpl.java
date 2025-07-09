@@ -8,12 +8,14 @@ import in.theexplorers.quiz.repositories.OptionRepository;
 import in.theexplorers.quiz.repositories.QuestionRepository;
 import in.theexplorers.quiz.services.OptionService;
 import in.theexplorers.quiz.utilities.converters.OptionConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class OptionServiceImpl implements OptionService {
     private final OptionRepository optionRepository;
     private final QuestionRepository questionRepository;

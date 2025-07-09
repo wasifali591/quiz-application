@@ -26,8 +26,8 @@ import java.util.Date;
 @Entity
 @Data
 @Schema(description = "Represents an answer submitted by a user for a quiz question")
+@Table(name = "answer")
 public class Answer {
-
     /**
      * Unique identifier for each answer record.
      */

@@ -27,7 +27,7 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
      * @param questionId the ID of the question
      * @return a list of options related to the given question
      */
-    @Query("SELECT o FROM option o WHERE o.question_id = :questionId")
+    @Query("SELECT o FROM Option o WHERE o.question.id = :questionId")
     List<Option> findByQuestionId(@Param("questionId") Long questionId);
 
     /**

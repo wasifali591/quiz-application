@@ -2,10 +2,12 @@ package in.theexplorers.quiz.services.impl;
 
 import in.theexplorers.quiz.dtos.request.QuizActivationDto;
 import in.theexplorers.quiz.services.WebhookService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class WebhookServiceImpl implements WebhookService {
 
     private final RestTemplate restTemplate;

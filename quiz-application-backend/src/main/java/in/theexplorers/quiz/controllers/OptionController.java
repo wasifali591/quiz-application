@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequestMapping("/api/options")
-@Tag(name = "Options API", description = "Endpoints for managing options")
+@Tag(name = "Options Controller", description = "APIs for managing options")
 public class OptionController {
 
     private final OptionService optionService;

@@ -6,6 +6,7 @@ package in.theexplorers.quiz.controllers;
 import in.theexplorers.quiz.dtos.request.QuizActivationDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.services.QuizService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/webhooks")
+@Tag(name = "Webhook Controller", description = "APIs for managing webhooks")
 public class WebhookController {
 
     private final QuizService quizService;

@@ -4,7 +4,9 @@ import in.theexplorers.quiz.dtos.common.QuestionDto;
 import in.theexplorers.quiz.entities.Question;
 import in.theexplorers.quiz.utilities.converters.QuestionConverter;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class QuestionConverterImpl implements QuestionConverter {
     private final ModelMapper modelMapper;
 

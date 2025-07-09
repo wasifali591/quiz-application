@@ -26,6 +26,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
      * @param quizId The ID of the quiz.
      * @return A list of questions.
      */
-    @Query("SELECT q FROM questions q WHERE q.quiz_id = :quizId")
+    @Query("SELECT q FROM Question q WHERE q.quiz.id = :quizId")
     List<Question> findByQuizId(@Param("quizId") Long quizId);
 }

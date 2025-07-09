@@ -4,7 +4,9 @@ import in.theexplorers.quiz.dtos.common.UserDto;
 import in.theexplorers.quiz.entities.User;
 import in.theexplorers.quiz.utilities.converters.UserConverter;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserConverterImpl implements UserConverter {
     private final ModelMapper modelMapper;
 

@@ -28,6 +28,7 @@ import java.util.Date;
 @Data
 @Builder
 @Schema(description = "Represents a user in the quiz application, including credentials, role, and status.")
+@Table(name = "user")
 public class User {
 
     /**

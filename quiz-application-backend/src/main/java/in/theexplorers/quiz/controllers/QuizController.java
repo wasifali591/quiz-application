@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/quizzes")
-@Tag(name = "Quiz Management", description = "Endpoints for managing quizzes and user interactions with them")
+@Tag(name = "Quiz Controller", description = "APIs for managing quizzes")
 public class QuizController {
 
     private final QuizService quizService;
