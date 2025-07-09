@@ -6,7 +6,7 @@ package in.theexplorers.quiz.utilities;
 /**
  * Utility class for declaring constant string values used in the application.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

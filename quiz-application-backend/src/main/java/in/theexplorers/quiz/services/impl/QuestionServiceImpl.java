@@ -1,4 +1,7 @@
 package in.theexplorers.quiz.services.impl;
+/*
+ * Copyright (c) 2024 TheExplorers.
+ */
 
 import in.theexplorers.quiz.dtos.common.AnswerDto;
 import in.theexplorers.quiz.dtos.common.OptionDto;
@@ -175,6 +178,29 @@ public class QuestionServiceImpl implements QuestionService {
         log.info("Retrieved {} answers for question ID: {}", answerDtos.size(), questionId);
 
         return answerDtos;
+    }
+
+    /**
+     * Retrieve all questions for a given quiz ID.
+     *
+     * @param quizId ID of the quiz.
+     * @return List of QuestionDto objects.
+     * @throws ResourceNotFoundException if no questions are found for the given quiz ID.
+     */
+    @Override
+    public List<QuestionDto> getQuestionsByQuizId(Long quizId) {
+        // Retrieve questions directly by quizId
+        List<Question> questions = questionRepository.findByQuizId(quizId);
+
+        // If no questions are found, throw an exception
+        if (questions.isEmpty()) {
+            throw new ResourceNotFoundException("No questions found for quiz with ID: " + quizId);
+        }
+
+        // Convert entities to DTOs and return
+        return questions.stream()
+                .map(questionConverter::questionToQuestionDto)
+                .collect(Collectors.toList());
     }
 
 }

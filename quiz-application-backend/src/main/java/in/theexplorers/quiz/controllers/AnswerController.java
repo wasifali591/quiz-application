@@ -6,6 +6,7 @@ package in.theexplorers.quiz.controllers;
 import in.theexplorers.quiz.dtos.common.AnswerDto;
 import in.theexplorers.quiz.dtos.response.ApiResponseDto;
 import in.theexplorers.quiz.services.AnswerService;
+import in.theexplorers.quiz.utilities.DateTimeUtility;
 import in.theexplorers.quiz.utilities.StringConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,7 +45,7 @@ public class AnswerController {
         List<AnswerDto> answers = answerService.getAllAnswers();
         logger.info(StringConstants.METHOD_END, "getAllAnswers");
         return ApiResponseDto.generateResponse(
-                HttpStatus.OK, answers, "All answers retrieved successfully", LocalDateTime.now());
+                HttpStatus.OK, answers, "All answers retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 
     /**
@@ -62,7 +63,7 @@ public class AnswerController {
         AnswerDto answer = answerService.getAnswerById(id);
         logger.info(StringConstants.METHOD_END, "getAnswerById");
         return ApiResponseDto.generateResponse(
-                HttpStatus.OK, answer, "Answer retrieved successfully", LocalDateTime.now());
+                HttpStatus.OK, answer, "Answer retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 
     /**
@@ -79,7 +80,7 @@ public class AnswerController {
         AnswerDto createdAnswer = answerService.submitAnswer(answerDto);
         logger.info(StringConstants.METHOD_END, "createAnswer");
         return ApiResponseDto.generateResponse(
-                HttpStatus.CREATED, createdAnswer, "Answer created successfully", LocalDateTime.now());
+                HttpStatus.CREATED, createdAnswer, "Answer created successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 
     /**
@@ -98,7 +99,7 @@ public class AnswerController {
         AnswerDto updatedAnswer = answerService.updateAnswer(id, answerDto);
         logger.info(StringConstants.METHOD_END, "updateAnswer");
         return ApiResponseDto.generateResponse(
-                HttpStatus.OK, updatedAnswer, "Answer updated successfully", LocalDateTime.now());
+                HttpStatus.OK, updatedAnswer, "Answer updated successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 
     /**
@@ -116,7 +117,7 @@ public class AnswerController {
         answerService.deleteAnswer(id);
         logger.info(StringConstants.METHOD_END, "deleteAnswer");
         return ApiResponseDto.generateResponse(
-                HttpStatus.OK, null, "Answer deleted successfully", LocalDateTime.now());
+                HttpStatus.OK, null, "Answer deleted successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 }
 

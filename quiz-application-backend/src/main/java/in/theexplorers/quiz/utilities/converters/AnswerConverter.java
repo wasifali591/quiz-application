@@ -9,7 +9,7 @@ import in.theexplorers.quiz.entities.Answer;
 /**
  * Converter interface for transforming between {@link Answer} entity and {@link AnswerDto} data transfer object.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

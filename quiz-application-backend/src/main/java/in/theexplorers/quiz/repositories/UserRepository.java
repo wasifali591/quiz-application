@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 /**
  * This is a repository interface which provides crud operation for {@link User}.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

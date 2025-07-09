@@ -20,7 +20,7 @@ import java.util.List;
  * possible answer options, and the correct answer. It also includes audit fields for
  * tracking creation and updates.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

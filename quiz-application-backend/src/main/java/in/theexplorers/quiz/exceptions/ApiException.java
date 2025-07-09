@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
  * This is a custom exception class.
  * It extends {@link RuntimeException}.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

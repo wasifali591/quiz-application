@@ -23,7 +23,7 @@ import java.util.List;
  *     Optional&lt;AnswerDto&gt; answer = answerService.getById(1L);
  * </pre>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

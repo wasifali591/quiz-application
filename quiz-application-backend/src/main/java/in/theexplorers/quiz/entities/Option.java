@@ -20,7 +20,7 @@ import java.util.Date;
  * <p>This entity stores the details of a specific answer option, including its text,
  * association with a question, and audit fields for tracking creation and updates.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

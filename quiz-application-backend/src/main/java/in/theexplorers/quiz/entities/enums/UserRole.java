@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *   <li><b>USER</b>: Represents a regular user who participates in quizzes.</li>
  * </ul>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

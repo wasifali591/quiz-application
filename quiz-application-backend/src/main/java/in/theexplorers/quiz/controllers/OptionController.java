@@ -6,6 +6,7 @@ package in.theexplorers.quiz.controllers;
 import in.theexplorers.quiz.dtos.common.OptionDto;
 import in.theexplorers.quiz.dtos.response.ApiResponseDto;
 import in.theexplorers.quiz.services.OptionService;
+import in.theexplorers.quiz.utilities.DateTimeUtility;
 import in.theexplorers.quiz.utilities.StringConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
  *
  * <p>Provides CRUD operations for options.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */
@@ -53,7 +54,7 @@ public class OptionController {
         OptionDto option = optionService.getOptionById(id);
         log.info(StringConstants.METHOD_END, "getOptionById");
         return ApiResponseDto.generateResponse(
-                HttpStatus.OK, option, "Option retrieved successfully", LocalDateTime.now());
+                HttpStatus.OK, option, "Option retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 
     /**
@@ -73,7 +74,7 @@ public class OptionController {
         OptionDto updatedOption = optionService.updateOptionById(id, optionDto);
         log.info(StringConstants.METHOD_END, "updateOptionById");
         return ApiResponseDto.generateResponse(
-                HttpStatus.OK, updatedOption, "Option updated successfully", LocalDateTime.now());
+                HttpStatus.OK, updatedOption, "Option updated successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 
     /**
@@ -91,7 +92,7 @@ public class OptionController {
         optionService.deleteOptionById(id);
         log.info(StringConstants.METHOD_END, "deleteOptionById");
         return ApiResponseDto.generateResponse(
-                HttpStatus.OK, null, "Option deleted successfully", LocalDateTime.now());
+                HttpStatus.OK, null, "Option deleted successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
     }
 }
 

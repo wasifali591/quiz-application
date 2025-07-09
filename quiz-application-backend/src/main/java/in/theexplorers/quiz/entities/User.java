@@ -20,7 +20,7 @@ import java.util.Date;
  * and status. Users can either be an <b>ADMIN</b> (with privileges to manage
  * quizzes and user data) or a <b>USER</b> (who participates in quizzes).</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

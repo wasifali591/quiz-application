@@ -5,15 +5,27 @@ package in.theexplorers.quiz.repositories;
 
 import in.theexplorers.quiz.entities.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * This is a repository interface which provides crud operation for {@link Question}.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
+    /**
+     * Fetch all questions associated with the given quiz ID using a native query.
+     *
+     * @param quizId The ID of the quiz.
+     * @return A list of questions.
+     */
+    @Query("SELECT q FROM questions q WHERE q.quiz_id = :quizId")
+    List<Question> findByQuizId(@Param("quizId") Long quizId);
 }

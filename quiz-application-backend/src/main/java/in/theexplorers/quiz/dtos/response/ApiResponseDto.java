@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 /**
  * A structured API response DTO class for standardizing responses.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * This is a configuration class for OpenAPI documentation.
  * It customizes metadata for the OpenAPI 3 documentation.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * This is a configuration class for Model Mapper
  * It creates a @Bean factory method to create ModelMapper instance
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

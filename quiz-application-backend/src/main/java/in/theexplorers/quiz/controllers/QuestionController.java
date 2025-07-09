@@ -28,7 +28,7 @@ import java.util.List;
  *
  * <p>Provides CRUD operations for questions and their associated options, as well as endpoints for submitting and retrieving answers.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

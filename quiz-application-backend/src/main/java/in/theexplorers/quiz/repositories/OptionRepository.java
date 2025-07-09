@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * This is a repository interface which provides crud operation for {@link Option}.
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */
@@ -27,7 +27,7 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
      * @param questionId the ID of the question
      * @return a list of options related to the given question
      */
-    @Query("SELECT o.* FROM option o WHERE o.question_id = :questionId")
+    @Query("SELECT o FROM option o WHERE o.question_id = :questionId")
     List<Option> findByQuestionId(@Param("questionId") Long questionId);
 
     /**

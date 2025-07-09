@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  * This is a custom exception class for already exist resource.
  * It extends {@link ApiException}
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

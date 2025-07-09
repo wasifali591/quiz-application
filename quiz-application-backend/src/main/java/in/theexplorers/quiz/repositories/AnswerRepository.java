@@ -19,7 +19,7 @@ import java.util.Optional;
  * <p>This interface allows for the management of user answers in the quiz application,
  * enabling basic CRUD operations to interact with the underlying database.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */
@@ -49,7 +49,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
      * @param quizId the ID of the quiz
      * @return a list of answers matching the given user and quiz IDs
      */
-    @Query("SELECT a.* FROM answer a JOIN question q ON a.question_id = q.id WHERE a.user_id = :userId AND q.quiz_id = :quizId")
+    @Query("SELECT a FROM answer a JOIN question q ON a.question_id = q.id WHERE a.user_id = :userId AND q.quiz_id = :quizId")
     List<Answer> findByUserIdAndQuizId(@Param("userId") Long userId, @Param("quizId") Long quizId);
 
     /**

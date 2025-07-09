@@ -3,13 +3,12 @@ package in.theexplorers.quiz.entities;
  * Copyright (c) 2024 TheExplorers.
  */
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 
@@ -19,7 +18,7 @@ import java.util.Date;
  * <p>This entity stores the details of an answer submitted by a user for a specific question,
  * including the selected answer, user association, and audit fields for tracking creation and updates.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

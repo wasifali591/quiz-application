@@ -20,7 +20,7 @@ import java.util.List;
  * <p>This entity stores information about each quiz, including title, scheduled start
  * and end times, associated questions, and audit details for record management.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

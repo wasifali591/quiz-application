@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
  * It extends {@link ApiException}.
  * It validates user inputs
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */

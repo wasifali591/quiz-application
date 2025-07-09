@@ -1,5 +1,9 @@
 package in.theexplorers.quiz.services.impl;
+/*
+ * Copyright (c) 2024 TheExplorers.
+ */
 
+import in.theexplorers.quiz.dtos.common.QuestionDto;
 import in.theexplorers.quiz.dtos.request.QuizSubmissionDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.dtos.response.QuizResultDto;
@@ -9,22 +13,25 @@ import in.theexplorers.quiz.exceptions.ResourceNotFoundException;
 import in.theexplorers.quiz.repositories.QuestionRepository;
 import in.theexplorers.quiz.repositories.QuizRepository;
 import in.theexplorers.quiz.services.QuizService;
+import in.theexplorers.quiz.utilities.converters.QuestionConverter;
 import in.theexplorers.quiz.utilities.converters.QuizConverter;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class QuizServiceImpl implements QuizService {
     private final QuizRepository quizRepository;
     private final QuestionRepository questionRepository;
-
+    private final QuestionConverter questionConverter;
     private final QuizConverter quizConverter;
 
-    public QuizServiceImpl(QuizRepository quizRepository, QuestionRepository questionRepository, QuizConverter quizConverter) {
+    public QuizServiceImpl(QuizRepository quizRepository, QuestionRepository questionRepository, QuestionConverter questionConverter, QuizConverter quizConverter) {
         this.quizRepository = quizRepository;
         this.questionRepository = questionRepository;
+        this.questionConverter = questionConverter;
         this.quizConverter = quizConverter;
     }
 
@@ -32,7 +39,7 @@ public class QuizServiceImpl implements QuizService {
     public List<QuizDto> getAllQuizzes() {
         return quizRepository.findAll().stream()
                 .map(quizConverter::quizToQuizDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -68,14 +75,32 @@ public class QuizServiceImpl implements QuizService {
         quizRepository.deleteById(quizId);
     }
 
+    /**
+     * Adds a question to a specific quiz.
+     *
+     * @param quizId      The ID of the quiz.
+     * @param questionDto The details of the question to add.
+     * @return The added question as a QuestionDto.
+     * @throws ResourceNotFoundException If the quiz with the given ID does not exist.
+     */
+    @Transactional
     @Override
-    public void addQuestionsToQuiz(Long quizId, List<Long> questionIds) {
+    public QuestionDto addQuestionToQuiz(Long quizId, QuestionDto questionDto) {
+        // Fetch the quiz by ID
         Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + quizId));
 
-        List<Question> questions = questionRepository.findAllById(questionIds);
-        quiz.getQuestions().addAll(questions);
-        quizRepository.save(quiz);
+        // Convert QuestionDto to Question entity
+        Question question = questionConverter.questionDtoToQuestion(questionDto);
+
+        // Associate the question with the quiz
+        question.setQuiz(quiz);
+
+        // Save the question in the database
+        Question savedQuestion = questionRepository.save(question);
+
+        // Convert and return the saved Question entity to DTO
+        return questionConverter.questionToQuestionDto(savedQuestion);
     }
 
     @Override
@@ -89,5 +114,22 @@ public class QuizServiceImpl implements QuizService {
                 .score(50) // Example: Computed score
                 .build();
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<QuizDto> findInactiveQuizzesWithinTimeRange() {
+        LocalDateTime now = LocalDateTime.now();
+
+        // Fetch the list of inactive quizzes within the specified time range
+        List<Quiz> quizList = quizRepository.findAllByStartTimeBeforeAndEndTimeAfterAndIsActiveFalse(now);
+
+        // Return the DTO list
+        return quizList.stream()
+                .map(quizConverter::quizToQuizDto)
+                .toList();
+    }
+
 }
 

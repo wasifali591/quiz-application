@@ -51,4 +51,12 @@ public interface QuestionService {
      * @throws ResourceNotFoundException if the question with the given ID is not found.
      */
     List<AnswerDto> getAnswersForQuestion(Long questionId);
+
+    /**
+     * Retrieve all questions for a given quiz ID.
+     *
+     * @param quizId ID of the quiz.
+     * @return List of QuestionDto objects.
+     */
+    List<QuestionDto> getQuestionsByQuizId(Long quizId);
 }

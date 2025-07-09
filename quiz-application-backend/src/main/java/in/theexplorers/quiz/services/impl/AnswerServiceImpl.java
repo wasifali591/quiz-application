@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * <p>This class implements CRUD operations for {@link Answer} entities, including methods
  * for retrieving answers by ID, getting all answers, adding, updating, and inactivating answers.</p>
  *
- * @author Wasif
+ * @author Md Wasif Ali
  * @version 1.0.0
  * @since 1.0.0
  */
