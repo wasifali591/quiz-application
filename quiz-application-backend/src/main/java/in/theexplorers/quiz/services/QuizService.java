@@ -1,6 +1,8 @@
 package in.theexplorers.quiz.services;
 
 import in.theexplorers.quiz.dtos.common.QuestionDto;
+import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
+import in.theexplorers.quiz.dtos.request.QuizRequestDto;
 import in.theexplorers.quiz.dtos.request.QuizSubmissionDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.dtos.response.QuizResultDto;
@@ -12,9 +14,17 @@ public interface QuizService {
 
     QuizDto getQuizById(Long quizId);
 
-    QuizDto createQuiz(QuizDto quizDto);
+    QuizDto createQuiz(QuizRequestDto quizRequestDto);
 
-    QuizDto updateQuiz(Long quizId, QuizDto quizDto);
+    /**
+     * Updates an existing quiz with the given ID using the provided request data.
+     *
+     * @param quizId         ID of the quiz to be updated.
+     * @param quizRequestDto DTO containing the updated quiz details.
+     * @return Updated quiz details.
+     */
+    QuizDto updateQuiz(Long quizId, QuizRequestDto quizRequestDto);
+
 
     void deleteQuiz(Long quizId);
 
@@ -22,10 +32,10 @@ public interface QuizService {
      * Adds a question to a specific quiz.
      *
      * @param quizId      The ID of the quiz.
-     * @param questionDto The details of the question to add.
+     * @param questionRequestDto The details of the question to add.
      * @return The added question as a QuestionDto.
      */
-    QuestionDto addQuestionToQuiz(Long quizId, QuestionDto questionDto);
+    QuestionDto addQuestionToQuiz(Long quizId, QuestionRequestDto questionRequestDto);
 
     QuizResultDto evaluateQuiz(Long quizId, QuizSubmissionDto submission);
 

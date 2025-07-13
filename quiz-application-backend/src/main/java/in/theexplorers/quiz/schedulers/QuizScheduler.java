@@ -6,6 +6,7 @@ package in.theexplorers.quiz.schedulers;
 
 import in.theexplorers.quiz.services.QuizService;
 import in.theexplorers.quiz.services.WebhookService;
+import in.theexplorers.quiz.utilities.converters.QuizConverter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -24,23 +25,23 @@ public class QuizScheduler {
 
     private final WebhookService webhookService;
     private final QuizService quizService;
+    private final QuizConverter quizConverter;
 
-    public QuizScheduler(WebhookService webhookService,
-                         QuizService quizService) {
+    public QuizScheduler(WebhookService webhookService, QuizService quizService, QuizConverter quizConverter) {
         this.webhookService = webhookService;
         this.quizService = quizService;
+        this.quizConverter = quizConverter;
     }
 
     @Scheduled(fixedRate = 60000) // Runs every 1 minute
     public void activateQuizzes() {
-        quizService.findInactiveQuizzesWithinTimeRange()
-                .forEach(quiz -> {
-                    // Update quiz status
-                    quiz.setActive(true);
-                    quizService.updateQuiz(quiz.getId(), quiz);
+        quizService.findInactiveQuizzesWithinTimeRange().forEach(quiz -> {
+            // Update quiz status
+            quiz.setActive(true);
+            quizService.updateQuiz(quiz.getId(), quizConverter.quizDtoToQuizRequestDto(quiz));
 
-                    // Trigger webhook
-                    webhookService.triggerQuizActivationWebhook(quiz.getId());
-                });
+            // Trigger webhook
+            webhookService.triggerQuizActivationWebhook(quiz.getId());
+        });
     }
 }

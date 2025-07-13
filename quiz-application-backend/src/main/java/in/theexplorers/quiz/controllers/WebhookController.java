@@ -6,6 +6,7 @@ package in.theexplorers.quiz.controllers;
 import in.theexplorers.quiz.dtos.request.QuizActivationDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.services.QuizService;
+import in.theexplorers.quiz.utilities.converters.QuizConverter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebhookController {
 
     private final QuizService quizService;
+    private final QuizConverter quizConverter;
 
-    public WebhookController(QuizService quizService) {
+    public WebhookController(QuizService quizService, QuizConverter quizConverter) {
         this.quizService = quizService;
+        this.quizConverter = quizConverter;
     }
 
     @PostMapping("/quiz-activation")
@@ -37,7 +40,7 @@ public class WebhookController {
         quizDto.setActive(true);
 
         // Update the quiz
-        quizService.updateQuiz(quizDto.getId(), quizDto);
+        quizService.updateQuiz(quizDto.getId(), quizConverter.quizDtoToQuizRequestDto(quizDto));
     }
 
 }

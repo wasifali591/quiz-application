@@ -6,7 +6,6 @@ package in.theexplorers.quiz.configurations;
 import in.theexplorers.quiz.dtos.response.ApiResponseDto;
 import in.theexplorers.quiz.exceptions.ApiException;
 import in.theexplorers.quiz.exceptions.ValidationException;
-import in.theexplorers.quiz.utilities.DateTimeUtility;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,7 +32,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(ApiException.class)
     protected ResponseEntity<ApiResponseDto> handleApiException(ApiException exception) {
-        return ApiResponseDto.generateResponse(exception.getHttpStatus(), null, exception.getMessage(), LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(exception.getHttpStatus(), null, exception.getMessage(), LocalDateTime.now());
     }
 
     /**
@@ -44,6 +43,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(ValidationException.class)
     protected ResponseEntity<ApiResponseDto> handleValidationException(ValidationException exception) {
-        return ApiResponseDto.generateResponse(HttpStatus.BAD_REQUEST, null, exception.getMessage(), LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.BAD_REQUEST, null, exception.getMessage(), LocalDateTime.now());
     }
 }

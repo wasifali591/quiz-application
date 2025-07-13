@@ -5,8 +5,10 @@ package in.theexplorers.quiz.entities;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -27,6 +29,8 @@ import java.util.List;
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Represents the question of the  quiz")
 @Table(name = "question")
 public class Question {
@@ -60,13 +64,6 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Schema(description = "List of possible answer options associated with this question.")
     private List<Option> options;
-
-    /**
-     * Correct answer to the question, stored as a string.
-     */
-    @Column(nullable = false)
-    @Schema(description = "Correct answer to the question.", example = "Paris")
-    private String correctAnswer;
 
     /**
      * Indicates whether the question is active. Default is true.

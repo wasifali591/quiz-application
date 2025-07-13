@@ -4,6 +4,8 @@ package in.theexplorers.quiz.controllers;
  */
 
 import in.theexplorers.quiz.dtos.common.QuestionDto;
+import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
+import in.theexplorers.quiz.dtos.request.QuizRequestDto;
 import in.theexplorers.quiz.dtos.response.ApiResponseDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.services.QuestionService;
@@ -11,6 +13,7 @@ import in.theexplorers.quiz.services.QuizService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,14 +76,14 @@ public class QuizController {
     /**
      * Create a new quiz.
      *
-     * @param quizDto Details of the quiz to create.
+     * @param quizRequestDto Details of the quiz to create.
      * @return Created quiz details.
      */
     @Operation(summary = "Create a new quiz", description = "Creates a new quiz with the given details.")
     @ApiResponse(responseCode = "201", description = "Quiz created successfully")
     @PostMapping
-    public ResponseEntity<ApiResponseDto> createQuiz(@RequestBody QuizDto quizDto) {
-        QuizDto createdQuiz = quizService.createQuiz(quizDto);
+    public ResponseEntity<ApiResponseDto> createQuiz(@Valid @RequestBody QuizRequestDto quizRequestDto) {
+        QuizDto createdQuiz = quizService.createQuiz(quizRequestDto);
         return ApiResponseDto.generateResponse(HttpStatus.CREATED, createdQuiz, "Quiz created successfully", LocalDateTime.now());
     }
 
@@ -88,15 +91,15 @@ public class QuizController {
      * Update a quiz by ID.
      *
      * @param quizId  ID of the quiz to update.
-     * @param quizDto Updated quiz details.
+     * @param quizRequestDto Updated quiz details.
      * @return Updated quiz details.
      */
     @Operation(summary = "Update a quiz", description = "Updates the details of an existing quiz by its ID.")
     @ApiResponse(responseCode = "200", description = "Quiz updated successfully")
     @ApiResponse(responseCode = "404", description = "Quiz not found")
     @PutMapping("/{quizId}")
-    public ResponseEntity<ApiResponseDto> updateQuiz(@PathVariable Long quizId, @RequestBody QuizDto quizDto) {
-        QuizDto updatedQuiz = quizService.updateQuiz(quizId, quizDto);
+    public ResponseEntity<ApiResponseDto> updateQuiz(@PathVariable Long quizId, @Valid @RequestBody QuizRequestDto quizRequestDto) {
+        QuizDto updatedQuiz = quizService.updateQuiz(quizId, quizRequestDto);
         return ApiResponseDto.generateResponse(HttpStatus.OK, updatedQuiz, "Quiz updated successfully", LocalDateTime.now());
     }
 
@@ -135,14 +138,14 @@ public class QuizController {
      * Add questions to a quiz.
      *
      * @param quizId      ID of the quiz.
-     * @param questionDto List of questions to add.
+     * @param questionRequestDto List of questions to add.
      * @return List of added questions.
      */
     @Operation(summary = "Add questions to a quiz", description = "Adds a list of questions to a quiz.")
     @ApiResponse(responseCode = "201", description = "Questions added successfully")
     @PostMapping("/{quizId}/questions")
-    public ResponseEntity<ApiResponseDto> addQuestionsToQuiz(@PathVariable Long quizId, @RequestBody QuestionDto questionDto) {
-        QuestionDto addedQuestions = quizService.addQuestionToQuiz(quizId, questionDto);
+    public ResponseEntity<ApiResponseDto> addQuestionsToQuiz(@PathVariable Long quizId, @RequestBody QuestionRequestDto questionRequestDto) {
+        QuestionDto addedQuestions = quizService.addQuestionToQuiz(quizId, questionRequestDto);
         return ApiResponseDto.generateResponse(HttpStatus.CREATED, addedQuestions, "Questions added successfully", LocalDateTime.now());
     }
 }

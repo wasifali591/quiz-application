@@ -5,8 +5,10 @@ package in.theexplorers.quiz.entities;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,6 +27,8 @@ import java.util.Date;
 @Builder
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Represents an answer submitted by a user for a quiz question")
 @Table(name = "answer")
 public class Answer {

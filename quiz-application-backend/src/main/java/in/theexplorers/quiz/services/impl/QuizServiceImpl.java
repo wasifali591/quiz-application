@@ -4,6 +4,8 @@ package in.theexplorers.quiz.services.impl;
  */
 
 import in.theexplorers.quiz.dtos.common.QuestionDto;
+import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
+import in.theexplorers.quiz.dtos.request.QuizRequestDto;
 import in.theexplorers.quiz.dtos.request.QuizSubmissionDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.dtos.response.QuizResultDto;
@@ -39,34 +41,46 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<QuizDto> getAllQuizzes() {
-        return quizRepository.findAll().stream()
-                .map(quizConverter::quizToQuizDto)
-                .toList();
+        return quizRepository.findAll().stream().map(quizConverter::quizToQuizDto).toList();
     }
 
     @Override
     public QuizDto getQuizById(Long quizId) {
-        Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
         return quizConverter.quizToQuizDto(quiz);
     }
 
+    /**
+     * @param quizRequestDto
+     * @return
+     */
     @Override
-    public QuizDto createQuiz(QuizDto quizDto) {
-        Quiz quiz = quizConverter.quizDtoToQuiz(quizDto);
+    public QuizDto createQuiz(QuizRequestDto quizRequestDto) {
+        Quiz quiz = quizConverter.quizRequestDtoToQuiz(quizRequestDto);
+        // Temporary hardcoded user
+        quiz.setCreatedBy("SYSTEM");
         quiz = quizRepository.save(quiz);
         return quizConverter.quizToQuizDto(quiz);
     }
 
-    @Override
-    public QuizDto updateQuiz(Long quizId, QuizDto quizDto) {
-        Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
 
-        quiz.setTitle(quizDto.getTitle());
-        quiz.setDescription(quizDto.getDescription());
-        quiz.setStartTime(quizDto.getStartTime());
-        quiz.setEndTime(quizDto.getEndTime());
+    /**
+     * Updates an existing quiz with the given ID using the provided request data.
+     *
+     * @param quizId         ID of the quiz to be updated.
+     * @param quizRequestDto DTO containing the updated quiz details.
+     * @return Updated quiz details.
+     */
+    @Override
+    public QuizDto updateQuiz(Long quizId, QuizRequestDto quizRequestDto) {
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+
+        quiz = quizConverter.quizRequestDtoToQuiz(quizRequestDto, quiz);
+//        quiz.setTitle(quizRequestDto.getTitle());
+//        quiz.setDescription(quizRequestDto.getDescription());
+//        quiz.setStartTime(quizRequestDto.getStartTime());
+//        quiz.setEndTime(quizRequestDto.getEndTime());
+        quiz.setUpdatedBy("SYSTEM");
         quiz = quizRepository.save(quiz);
 
         return quizConverter.quizToQuizDto(quiz);
@@ -74,23 +88,25 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public void deleteQuiz(Long quizId) {
-        quizRepository.deleteById(quizId);
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + quizId));
+
+        quiz.setIsActive(false);
+        quizRepository.save(quiz);
     }
 
     /**
      * Adds a question to a specific quiz.
      *
      * @param quizId      The ID of the quiz.
-     * @param questionDto The details of the question to add.
+     * @param questionRequestDto The details of the question to add.
      * @return The added question as a QuestionDto.
      * @throws ResourceNotFoundException If the quiz with the given ID does not exist.
      */
     @Transactional
     @Override
-    public QuestionDto addQuestionToQuiz(Long quizId, QuestionDto questionDto) {
+    public QuestionDto addQuestionToQuiz(Long quizId, QuestionRequestDto questionRequestDto) {
         // Fetch the quiz by ID
-        Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + quizId));
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + quizId));
 
         // Convert QuestionDto to Question entity
         Question question = questionConverter.questionDtoToQuestion(questionDto);
@@ -108,10 +124,7 @@ public class QuizServiceImpl implements QuizService {
     @Override
     public QuizResultDto evaluateQuiz(Long quizId, QuizSubmissionDto submission) {
         // Evaluate logic
-        return QuizResultDto.builder()
-                .quizId(quizId)
-                .userId(submission.getUserId())
-                .correctAnswers(5) // Example: Computed based on submission
+        return QuizResultDto.builder().quizId(quizId).userId(submission.getUserId()).correctAnswers(5) // Example: Computed based on submission
                 .totalQuestions(10) // Example: Quiz question count
                 .score(50) // Example: Computed score
                 .build();
@@ -128,9 +141,7 @@ public class QuizServiceImpl implements QuizService {
         List<Quiz> quizList = quizRepository.findAllByStartTimeBeforeAndEndTimeAfterAndIsActiveFalse(now);
 
         // Return the DTO list
-        return quizList.stream()
-                .map(quizConverter::quizToQuizDto)
-                .toList();
+        return quizList.stream().map(quizConverter::quizToQuizDto).toList();
     }
 
 }
