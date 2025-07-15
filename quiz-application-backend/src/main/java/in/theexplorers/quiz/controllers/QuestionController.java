@@ -6,7 +6,11 @@ package in.theexplorers.quiz.controllers;
 import in.theexplorers.quiz.dtos.common.AnswerDto;
 import in.theexplorers.quiz.dtos.common.OptionDto;
 import in.theexplorers.quiz.dtos.common.QuestionDto;
+import in.theexplorers.quiz.dtos.request.OptionRequestDto;
+import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
 import in.theexplorers.quiz.dtos.response.ApiResponseDto;
+import in.theexplorers.quiz.dtos.response.OptionResponseDto;
+import in.theexplorers.quiz.dtos.response.QuestionResponseDto;
 import in.theexplorers.quiz.services.OptionService;
 import in.theexplorers.quiz.services.QuestionService;
 import in.theexplorers.quiz.utilities.DateTimeUtility;
@@ -55,14 +59,13 @@ public class QuestionController {
      * @return a ResponseEntity containing a list of {@link QuestionDto} and a success message.
      */
     @Operation(summary = "Get all questions", description = "Retrieve all questions from the system.")
-    @ApiResponse(responseCode = "200", description = "Questions retrieved successfully",
-            content = @Content(schema = @Schema(implementation = QuestionDto.class)))
+    @ApiResponse(responseCode = "200", description = "Questions retrieved successfully", content = @Content(schema = @Schema(implementation = QuestionDto.class)))
     @GetMapping
     public ResponseEntity<ApiResponseDto> getAllQuestions() {
         log.info(StringConstants.METHOD_START, "getAllQuestions");
-        List<QuestionDto> questions = questionService.getAllQuestions();
+        List<QuestionResponseDto> questions = questionService.getAllQuestions();
         log.info(StringConstants.METHOD_END, "getAllQuestions");
-        return ApiResponseDto.generateResponse(HttpStatus.OK, questions, "Questions retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, questions, "Questions retrieved successfully", LocalDateTime.now());
     }
 
     /**
@@ -72,52 +75,49 @@ public class QuestionController {
      * @return a ResponseEntity containing the {@link QuestionDto} and a success message.
      */
     @Operation(summary = "Get a question by ID", description = "Retrieve a specific question by its ID.")
-    @ApiResponse(responseCode = "200", description = "Question retrieved successfully",
-            content = @Content(schema = @Schema(implementation = QuestionDto.class)))
+    @ApiResponse(responseCode = "200", description = "Question retrieved successfully", content = @Content(schema = @Schema(implementation = QuestionDto.class)))
     @ApiResponse(responseCode = "404", description = "Question not found", content = @Content)
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponseDto> getQuestionById(@PathVariable Long id) {
         log.info(StringConstants.METHOD_START, "getQuestionById");
-        QuestionDto question = questionService.getQuestionById(id);
+        QuestionResponseDto question = questionService.getQuestionById(id);
         log.info(StringConstants.METHOD_END, "getQuestionById");
-        return ApiResponseDto.generateResponse(HttpStatus.OK, question, "Question retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, question, "Question retrieved successfully", LocalDateTime.now());
     }
 
-    /**
-     * Add a new question to the system.
-     *
-     * @param questionDto the details of the question to create.
-     * @return a ResponseEntity containing the created {@link QuestionDto} and a success message.
-     */
-    @Operation(summary = "Create a new question", description = "Add a new question to the system.")
-    @ApiResponse(responseCode = "201", description = "Question created successfully",
-            content = @Content(schema = @Schema(implementation = QuestionDto.class)))
-    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
-    @PostMapping
-    public ResponseEntity<ApiResponseDto> createQuestion(@RequestBody QuestionDto questionDto) {
-        log.info(StringConstants.METHOD_START, "createQuestion");
-        QuestionDto createdQuestion = questionService.createQuestion(questionDto);
-        log.info(StringConstants.METHOD_END, "createQuestion");
-        return ApiResponseDto.generateResponse(HttpStatus.CREATED, createdQuestion, "Question created successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
-    }
+//    /**
+//     * Add a new question to the system.
+//     *
+//     * @param questionDto the details of the question to create.
+//     * @return a ResponseEntity containing the created {@link QuestionDto} and a success message.
+//     */
+//    @Operation(summary = "Create a new question", description = "Add a new question to the system.")
+//    @ApiResponse(responseCode = "201", description = "Question created successfully", content = @Content(schema = @Schema(implementation = QuestionDto.class)))
+//    @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
+//    @PostMapping
+//    public ResponseEntity<ApiResponseDto> createQuestion(@RequestBody QuestionDto questionDto) {
+//        log.info(StringConstants.METHOD_START, "createQuestion");
+//        QuestionDto createdQuestion = questionService.createQuestion(questionDto);
+//        log.info(StringConstants.METHOD_END, "createQuestion");
+//        return ApiResponseDto.generateResponse(HttpStatus.CREATED, createdQuestion, "Question created successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+//    }
 
     /**
      * Update an existing question by its ID.
      *
-     * @param id          the ID of the question to update.
-     * @param questionDto the updated question details.
+     * @param id                 the ID of the question to update.
+     * @param questionRequestDto the updated question details.
      * @return a ResponseEntity containing the updated {@link QuestionDto} and a success message.
      */
     @Operation(summary = "Update an existing question", description = "Update a question by its ID.")
-    @ApiResponse(responseCode = "200", description = "Question updated successfully",
-            content = @Content(schema = @Schema(implementation = QuestionDto.class)))
+    @ApiResponse(responseCode = "200", description = "Question updated successfully", content = @Content(schema = @Schema(implementation = QuestionDto.class)))
     @ApiResponse(responseCode = "404", description = "Question not found", content = @Content)
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponseDto> updateQuestion(@PathVariable Long id, @RequestBody QuestionDto questionDto) {
+    public ResponseEntity<ApiResponseDto> updateQuestion(@PathVariable Long id, @RequestBody QuestionRequestDto questionRequestDto) {
         log.info(StringConstants.METHOD_START, "updateQuestion");
-        QuestionDto updatedQuestion = questionService.updateQuestion(id, questionDto);
+        QuestionResponseDto updatedQuestion = questionService.updateQuestion(id, questionRequestDto);
         log.info(StringConstants.METHOD_END, "updateQuestion");
-        return ApiResponseDto.generateResponse(HttpStatus.OK, updatedQuestion, "Question updated successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, updatedQuestion, "Question updated successfully", LocalDateTime.now());
     }
 
     /**
@@ -134,7 +134,7 @@ public class QuestionController {
         log.info(StringConstants.METHOD_START, "deleteQuestion");
         questionService.deleteQuestion(id);
         log.info(StringConstants.METHOD_END, "deleteQuestion");
-        return ApiResponseDto.generateResponse(HttpStatus.OK, null, "Question deleted successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, null, "Question deleted successfully", LocalDateTime.now());
     }
 
     // -------------------- Option Endpoints --------------------
@@ -143,19 +143,18 @@ public class QuestionController {
      * Add an option for a specific question.
      *
      * @param questionId the ID of the question to add an option to.
-     * @param optionDto  the option details.
+     * @param optionRequestDto  the option details.
      * @return a ResponseEntity containing the created {@link OptionDto} and a success message.
      */
     @Operation(summary = "Add an option to a question", description = "Add an option for a specific question.")
-    @ApiResponse(responseCode = "201", description = "Option added successfully",
-            content = @Content(schema = @Schema(implementation = OptionDto.class)))
+    @ApiResponse(responseCode = "201", description = "Option added successfully", content = @Content(schema = @Schema(implementation = OptionDto.class)))
     @ApiResponse(responseCode = "404", description = "Question not found", content = @Content)
     @PostMapping("/{questionId}/options")
-    public ResponseEntity<ApiResponseDto> addOptionToQuestion(@PathVariable Long questionId, @RequestBody OptionDto optionDto) {
+    public ResponseEntity<ApiResponseDto> addOptionToQuestion(@PathVariable Long questionId, @RequestBody OptionRequestDto optionRequestDto) {
         log.info(StringConstants.METHOD_START, "addOptionToQuestion");
-        OptionDto createdOption = optionService.addOption(questionId, optionDto);
+        OptionResponseDto createdOption = optionService.addOption(questionId, optionRequestDto);
         log.info(StringConstants.METHOD_END, "addOptionToQuestion");
-        return ApiResponseDto.generateResponse(HttpStatus.CREATED, createdOption, "Option added successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.CREATED, createdOption, "Option added successfully", LocalDateTime.now());
     }
 
     /**
@@ -165,15 +164,14 @@ public class QuestionController {
      * @return a ResponseEntity containing a list of {@link OptionDto} and a success message.
      */
     @Operation(summary = "Get all options for a question", description = "Retrieve all options for a specific question.")
-    @ApiResponse(responseCode = "200", description = "Options retrieved successfully",
-            content = @Content(schema = @Schema(implementation = OptionDto.class)))
+    @ApiResponse(responseCode = "200", description = "Options retrieved successfully", content = @Content(schema = @Schema(implementation = OptionDto.class)))
     @ApiResponse(responseCode = "404", description = "Question not found", content = @Content)
     @GetMapping("/{questionId}/options")
     public ResponseEntity<ApiResponseDto> getOptionsForQuestion(@PathVariable Long questionId) {
         log.info(StringConstants.METHOD_START, "getOptionsForQuestion");
-        List<OptionDto> options = optionService.getOptionsByQuestionId(questionId);
+        List<OptionResponseDto> options = optionService.getOptionsByQuestionId(questionId);
         log.info(StringConstants.METHOD_END, "getOptionsForQuestion");
-        return ApiResponseDto.generateResponse(HttpStatus.OK, options, "Options retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, options, "Options retrieved successfully", LocalDateTime.now());
     }
 
     // -------------------- Answer Endpoints --------------------
@@ -185,8 +183,7 @@ public class QuestionController {
      * @return a ResponseEntity containing a list of {@link AnswerDto} and a success message.
      */
     @Operation(summary = "Get all answers for a question", description = "Retrieve all answers submitted for a specific question.")
-    @ApiResponse(responseCode = "200", description = "Answers retrieved successfully",
-            content = @Content(schema = @Schema(implementation = AnswerDto.class)))
+    @ApiResponse(responseCode = "200", description = "Answers retrieved successfully", content = @Content(schema = @Schema(implementation = AnswerDto.class)))
     @ApiResponse(responseCode = "404", description = "Question not found", content = @Content)
     @GetMapping("/{questionId}/answers")
     public ResponseEntity<ApiResponseDto> getAnswersForQuestion(@PathVariable Long questionId) {

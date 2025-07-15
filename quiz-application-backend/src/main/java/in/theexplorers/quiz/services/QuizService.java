@@ -4,6 +4,7 @@ import in.theexplorers.quiz.dtos.common.QuestionDto;
 import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
 import in.theexplorers.quiz.dtos.request.QuizRequestDto;
 import in.theexplorers.quiz.dtos.request.QuizSubmissionDto;
+import in.theexplorers.quiz.dtos.response.QuestionResponseDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.dtos.response.QuizResultDto;
 
@@ -35,7 +36,7 @@ public interface QuizService {
      * @param questionRequestDto The details of the question to add.
      * @return The added question as a QuestionDto.
      */
-    QuestionDto addQuestionToQuiz(Long quizId, QuestionRequestDto questionRequestDto);
+    QuestionResponseDto addQuestionToQuiz(Long quizId, QuestionRequestDto questionRequestDto);
 
     QuizResultDto evaluateQuiz(Long quizId, QuizSubmissionDto submission);
 

@@ -3,18 +3,20 @@ package in.theexplorers.quiz.services;
 import in.theexplorers.quiz.dtos.common.AnswerDto;
 import in.theexplorers.quiz.dtos.common.OptionDto;
 import in.theexplorers.quiz.dtos.common.QuestionDto;
+import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
+import in.theexplorers.quiz.dtos.response.QuestionResponseDto;
 import in.theexplorers.quiz.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 
 public interface QuestionService {
-    List<QuestionDto> getAllQuestions();
+    List<QuestionResponseDto> getAllQuestions();
 
-    QuestionDto getQuestionById(Long questionId);
+    QuestionResponseDto getQuestionById(Long questionId);
 
     QuestionDto createQuestion(QuestionDto questionDto);
 
-    QuestionDto updateQuestion(Long questionId, QuestionDto questionDto);
+    QuestionResponseDto updateQuestion(Long questionId, QuestionRequestDto questionRequestDto);
 
     void deleteQuestion(Long questionId);
 
@@ -58,5 +60,5 @@ public interface QuestionService {
      * @param quizId ID of the quiz.
      * @return List of QuestionDto objects.
      */
-    List<QuestionDto> getQuestionsByQuizId(Long quizId);
+    List<QuestionResponseDto> getQuestionsByQuizId(Long quizId);
 }

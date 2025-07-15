@@ -3,10 +3,10 @@ package in.theexplorers.quiz.controllers;
  * Copyright (c) 2024 TheExplorers.
  */
 
-import in.theexplorers.quiz.dtos.common.QuestionDto;
 import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
 import in.theexplorers.quiz.dtos.request.QuizRequestDto;
 import in.theexplorers.quiz.dtos.response.ApiResponseDto;
+import in.theexplorers.quiz.dtos.response.QuestionResponseDto;
 import in.theexplorers.quiz.dtos.response.QuizDto;
 import in.theexplorers.quiz.services.QuestionService;
 import in.theexplorers.quiz.services.QuizService;
@@ -90,7 +90,7 @@ public class QuizController {
     /**
      * Update a quiz by ID.
      *
-     * @param quizId  ID of the quiz to update.
+     * @param quizId         ID of the quiz to update.
      * @param quizRequestDto Updated quiz details.
      * @return Updated quiz details.
      */
@@ -130,14 +130,14 @@ public class QuizController {
     @ApiResponse(responseCode = "200", description = "Questions retrieved successfully")
     @GetMapping("/{quizId}/questions")
     public ResponseEntity<ApiResponseDto> getQuestionsInQuiz(@PathVariable Long quizId) {
-        List<QuestionDto> questions = questionService.getQuestionsByQuizId(quizId);
+        List<QuestionResponseDto> questions = questionService.getQuestionsByQuizId(quizId);
         return ApiResponseDto.generateResponse(HttpStatus.OK, questions, "Questions retrieved successfully", LocalDateTime.now());
     }
 
     /**
      * Add questions to a quiz.
      *
-     * @param quizId      ID of the quiz.
+     * @param quizId             ID of the quiz.
      * @param questionRequestDto List of questions to add.
      * @return List of added questions.
      */
@@ -145,7 +145,7 @@ public class QuizController {
     @ApiResponse(responseCode = "201", description = "Questions added successfully")
     @PostMapping("/{quizId}/questions")
     public ResponseEntity<ApiResponseDto> addQuestionsToQuiz(@PathVariable Long quizId, @RequestBody QuestionRequestDto questionRequestDto) {
-        QuestionDto addedQuestions = quizService.addQuestionToQuiz(quizId, questionRequestDto);
+        QuestionResponseDto addedQuestions = quizService.addQuestionToQuiz(quizId, questionRequestDto);
         return ApiResponseDto.generateResponse(HttpStatus.CREATED, addedQuestions, "Questions added successfully", LocalDateTime.now());
     }
 }

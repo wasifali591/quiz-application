@@ -1,13 +1,15 @@
 package in.theexplorers.quiz.services;
 
 import in.theexplorers.quiz.dtos.common.OptionDto;
+import in.theexplorers.quiz.dtos.request.OptionRequestDto;
+import in.theexplorers.quiz.dtos.response.OptionResponseDto;
 
 import java.util.List;
 
 public interface OptionService {
-    List<OptionDto> getOptionsByQuestionId(Long questionId);
+    List<OptionResponseDto> getOptionsByQuestionId(Long questionId);
 
-    OptionDto addOption(Long questionId, OptionDto optionDto);
+    OptionResponseDto addOption(Long questionId, OptionRequestDto optionRequestDto);
 
     void deleteOptionById(Long optionId);
 

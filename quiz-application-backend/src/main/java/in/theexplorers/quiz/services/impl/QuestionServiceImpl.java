@@ -6,9 +6,12 @@ package in.theexplorers.quiz.services.impl;
 import in.theexplorers.quiz.dtos.common.AnswerDto;
 import in.theexplorers.quiz.dtos.common.OptionDto;
 import in.theexplorers.quiz.dtos.common.QuestionDto;
+import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
+import in.theexplorers.quiz.dtos.response.QuestionResponseDto;
 import in.theexplorers.quiz.entities.Answer;
 import in.theexplorers.quiz.entities.Option;
 import in.theexplorers.quiz.entities.Question;
+import in.theexplorers.quiz.entities.Quiz;
 import in.theexplorers.quiz.exceptions.ResourceNotFoundException;
 import in.theexplorers.quiz.repositories.AnswerRepository;
 import in.theexplorers.quiz.repositories.OptionRepository;
@@ -45,17 +48,14 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public List<QuestionDto> getAllQuestions() {
-        return questionRepository.findAll().stream()
-                .map(questionConverter::questionToQuestionDto)
-                .collect(Collectors.toList());
+    public List<QuestionResponseDto> getAllQuestions() {
+        return questionRepository.findAll().stream().map(questionConverter::questionToQuestionResponseDto).toList();
     }
 
     @Override
-    public QuestionDto getQuestionById(Long questionId) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
-        return questionConverter.questionToQuestionDto(question);
+    public QuestionResponseDto getQuestionById(Long questionId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+        return questionConverter.questionToQuestionResponseDto(question);
     }
 
     @Override
@@ -66,18 +66,23 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public QuestionDto updateQuestion(Long questionId, QuestionDto questionDto) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+    public QuestionResponseDto updateQuestion(Long questionId, QuestionRequestDto questionRequestDto) {
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question not found"));
 
-        question.setText(questionDto.getText());
+        // Update fields from DTO to existing entity
+        questionConverter.questionRequestDtoToQuestion(questionRequestDto, question);
+
+        // Save and return updated DTO
         question = questionRepository.save(question);
-
-        return questionConverter.questionToQuestionDto(question);
+        return questionConverter.questionToQuestionResponseDto(question);
     }
 
+    @Transactional
     @Override
     public void deleteQuestion(Long questionId) {
+        if (!questionRepository.existsById(questionId)) {
+            throw new ResourceNotFoundException("Question not found with ID: " + questionId);
+        }
         questionRepository.deleteById(questionId);
     }
 
@@ -145,9 +150,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<Option> options = optionRepository.findByQuestion(question);
 
         // Convert the Option entities to OptionDto objects
-        return options.stream()
-                .map(option -> new OptionDto(option.getId(), option.getText(), option.getIsCorrect(), option.getIsActive()))
-                .collect(Collectors.toList());
+        return options.stream().map(option -> new OptionDto(option.getId(), option.getText(), option.getIsCorrect(), option.getIsActive())).collect(Collectors.toList());
     }
 
     /**
@@ -163,15 +166,13 @@ public class QuestionServiceImpl implements QuestionService {
         log.info("Fetching answers for question ID: {}", questionId);
 
         // Fetch the question entity by ID, or throw an exception if not found
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + questionId));
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + questionId));
 
         // Retrieve all answers related to the question
         List<Answer> answers = answerRepository.findByQuestion(question);
 
         // Convert the list of Answer entities to a list of AnswerDto objects using AnswerConverter
-        List<AnswerDto> answerDtos = answers.stream()
-                .map(answerConverter::answerToAnswerDto) // Convert each Answer entity to AnswerDto
+        List<AnswerDto> answerDtos = answers.stream().map(answerConverter::answerToAnswerDto) // Convert each Answer entity to AnswerDto
                 .toList();
 
         // Log the successful retrieval
@@ -188,7 +189,7 @@ public class QuestionServiceImpl implements QuestionService {
      * @throws ResourceNotFoundException if no questions are found for the given quiz ID.
      */
     @Override
-    public List<QuestionDto> getQuestionsByQuizId(Long quizId) {
+    public List<QuestionResponseDto> getQuestionsByQuizId(Long quizId) {
         // Retrieve questions directly by quizId
         List<Question> questions = questionRepository.findByQuizId(quizId);
 
@@ -198,9 +199,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         // Convert entities to DTOs and return
-        return questions.stream()
-                .map(questionConverter::questionToQuestionDto)
-                .collect(Collectors.toList());
+        return questions.stream().map(questionConverter::questionToQuestionResponseDto).toList();
     }
 
 }

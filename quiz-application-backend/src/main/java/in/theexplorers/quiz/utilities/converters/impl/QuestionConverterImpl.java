@@ -1,6 +1,8 @@
 package in.theexplorers.quiz.utilities.converters.impl;
 
 import in.theexplorers.quiz.dtos.common.QuestionDto;
+import in.theexplorers.quiz.dtos.request.QuestionRequestDto;
+import in.theexplorers.quiz.dtos.response.QuestionResponseDto;
 import in.theexplorers.quiz.entities.Question;
 import in.theexplorers.quiz.utilities.converters.QuestionConverter;
 import org.modelmapper.ModelMapper;
@@ -24,12 +26,41 @@ public class QuestionConverterImpl implements QuestionConverter {
     }
 
     /**
+     * @param question
+     * @return
+     */
+    @Override
+    public QuestionResponseDto questionToQuestionResponseDto(Question question) {
+        return modelMapper.map(question, QuestionResponseDto.class);
+    }
+
+    /**
+     * @param questionRequestDto
+     * @param question
+     * @return
+     */
+    @Override
+    public Question questionRequestDtoToQuestion(QuestionRequestDto questionRequestDto, Question question) {
+        modelMapper.map(questionRequestDto, question);
+        return question;
+    }
+
+    /**
      * @param questionDto
      * @return
      */
     @Override
     public Question questionDtoToQuestion(QuestionDto questionDto) {
         return modelMapper.map(questionDto, Question.class);
+    }
+
+    /**
+     * @param questionRequestDto
+     * @return
+     */
+    @Override
+    public Question questionRequestDtoToQuestion(QuestionRequestDto questionRequestDto) {
+        return modelMapper.map(questionRequestDto, Question.class);
     }
 
     /**

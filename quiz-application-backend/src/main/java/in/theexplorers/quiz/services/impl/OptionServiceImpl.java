@@ -1,6 +1,8 @@
 package in.theexplorers.quiz.services.impl;
 
 import in.theexplorers.quiz.dtos.common.OptionDto;
+import in.theexplorers.quiz.dtos.request.OptionRequestDto;
+import in.theexplorers.quiz.dtos.response.OptionResponseDto;
 import in.theexplorers.quiz.entities.Option;
 import in.theexplorers.quiz.entities.Question;
 import in.theexplorers.quiz.exceptions.ResourceNotFoundException;
@@ -12,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,21 +29,22 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public List<OptionDto> getOptionsByQuestionId(Long questionId) {
+    public List<OptionResponseDto> getOptionsByQuestionId(Long questionId) {
         List<Option> options = optionRepository.findByQuestionId(questionId);
-        return options.stream().map(optionConverter::optionToOptionDto).collect(Collectors.toList());
+        return options.stream().map(optionConverter::optionToOptionResponseDto).toList();
     }
 
     @Override
-    public OptionDto addOption(Long questionId, OptionDto optionDto) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+    public OptionResponseDto addOption(Long questionId, OptionRequestDto optionRequestDto) {
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new ResourceNotFoundException("Question not found"));
 
-        Option option = optionConverter.optionDtoToOption(optionDto);
+        Option option = optionConverter.optionRequestDtoToOption(optionRequestDto);
         option.setQuestion(question);
+        //todo: remove after applying security
+        option.setCreatedBy("SYSTEM");
         option = optionRepository.save(option);
 
-        return optionConverter.optionToOptionDto(option);
+        return optionConverter.optionToOptionResponseDto(option);
     }
 
     @Override
@@ -59,8 +61,7 @@ public class OptionServiceImpl implements OptionService {
      */
     public OptionDto getOptionById(Long id) {
         // Find the option by ID, throw an exception if not found
-        Option option = optionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Option not found with id: " + id));
+        Option option = optionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Option not found with id: " + id));
 
         // Convert the Option entity to a DTO and return
         return optionConverter.optionToOptionDto(option);
@@ -76,8 +77,7 @@ public class OptionServiceImpl implements OptionService {
      */
     public OptionDto updateOptionById(Long id, OptionDto optionDto) {
         // Find the existing option by ID, or throw an exception if not found
-        Option existingOption = optionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Option not found with id: " + id));
+        Option existingOption = optionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Option not found with id: " + id));
 
         // Update the fields of the existing option entity
         existingOption.setText(optionDto.getText());

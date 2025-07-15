@@ -5,6 +5,7 @@ package in.theexplorers.quiz.repositories;
 
 import in.theexplorers.quiz.entities.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,8 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
      */
     @Query("SELECT q FROM Quiz q WHERE q.startTime <= :time AND q.endTime >= :time AND q.isActive = false")
     List<Quiz> findAllByStartTimeBeforeAndEndTimeAfterAndIsActiveFalse(@Param("time") LocalDateTime time);
+
+    @Modifying
+    @Query("UPDATE Quiz q SET q.isActive = false WHERE q.id = :quizId")
+    void deleteById(Long quizId);
 }

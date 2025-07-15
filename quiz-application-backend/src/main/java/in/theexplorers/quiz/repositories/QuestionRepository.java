@@ -5,6 +5,7 @@ package in.theexplorers.quiz.repositories;
 
 import in.theexplorers.quiz.entities.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
      */
     @Query("SELECT q FROM Question q WHERE q.quiz.id = :quizId")
     List<Question> findByQuizId(@Param("quizId") Long quizId);
+
+    @Modifying
+    @Query("UPDATE Question q SET q.isActive = false WHERE q.id = :questionId")
+    void deleteById(@Param("questionId") Long questionId);
+
 }
