@@ -118,7 +118,7 @@ public class QuizController {
         return ApiResponseDto.generateResponse(HttpStatus.OK, null, "Quiz deleted successfully", LocalDateTime.now());
     }
 
-    // Nested Resource for Questions in a Quiz
+    // -------------------- Question Endpoints --------------------
 
     /**
      * Get all questions in a quiz.

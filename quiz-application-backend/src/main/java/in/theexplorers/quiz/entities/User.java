@@ -4,14 +4,16 @@ package in.theexplorers.quiz.entities;
  */
 
 import in.theexplorers.quiz.entities.enums.UserRole;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Entity representing a user in the quiz application.
@@ -27,8 +29,9 @@ import java.util.Date;
 @Entity
 @Data
 @Builder
-@Schema(description = "Represents a user in the quiz application, including credentials, role, and status.")
-@Table(name = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "app_user")
 public class User {
 
     /**
@@ -36,28 +39,38 @@ public class User {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Unique identifier for each user record.")
     private Long id;
+
+    /**
+     * List of quiz attempts made by the user.
+     * Each entry represents the user's participation in a specific quiz,
+     * including details like status, score, and timestamps.
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserQuiz> quizAttempts;
+
+    /**
+     * List of answers given by the user
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers;
 
     /**
      * The name of the user.
      */
     @Column(nullable = false)
-    @Schema(description = "The name of the user.", example = "john doe")
     private String name;
 
     /**
      * The unique email of the user.
      */
     @Column(nullable = false, unique = true)
-    @Schema(description = "The unique email of the user.", example = "johndoe@mail.com")
     private String email;
 
     /**
      * The encrypted password for user authentication.
      */
     @Column(nullable = false)
-    @Schema(description = "The encrypted password for user authentication.")
     private String password;
 
     /**
@@ -65,27 +78,23 @@ public class User {
      */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @Schema(description = "The role of the user (either ADMIN or USER).")
     private UserRole role;
 
     /**
      * Indicates whether the user account is active. Default is true.
      */
     @Builder.Default
-    @Schema(description = "Indicates whether the user account is active. Default is true.", defaultValue = "true")
     private Boolean isActive = true;
 
     /**
      * The username of the user who created this record.
      */
     @Column(nullable = false, updatable = false)
-    @Schema(description = "The username of the user who created this record.", example = "admin")
     private String createdBy;
 
     /**
      * The username of the user who last updated this record.
      */
-    @Schema(description = "The username of the user who last updated this record.", example = "admin")
     private String updatedBy;
 
     /**
@@ -94,14 +103,12 @@ public class User {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
-    @Schema(description = "The timestamp when the user record was created.")
-    private Date createdDate;
+    private LocalDateTime createdOn;
 
     /**
      * The timestamp when the user record was last updated.
      */
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Schema(description = "The timestamp when the user record was last updated.")
-    private Date updatedDate;
+    private LocalDateTime updatedOn;
 }

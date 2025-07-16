@@ -142,8 +142,8 @@ public class QuestionController {
     /**
      * Add an option for a specific question.
      *
-     * @param questionId the ID of the question to add an option to.
-     * @param optionRequestDto  the option details.
+     * @param questionId       the ID of the question to add an option to.
+     * @param optionRequestDto the option details.
      * @return a ResponseEntity containing the created {@link OptionDto} and a success message.
      */
     @Operation(summary = "Add an option to a question", description = "Add an option for a specific question.")
@@ -182,14 +182,14 @@ public class QuestionController {
      * @param questionId the ID of the question to get answers for.
      * @return a ResponseEntity containing a list of {@link AnswerDto} and a success message.
      */
-    @Operation(summary = "Get all answers for a question", description = "Retrieve all answers submitted for a specific question.")
-    @ApiResponse(responseCode = "200", description = "Answers retrieved successfully", content = @Content(schema = @Schema(implementation = AnswerDto.class)))
-    @ApiResponse(responseCode = "404", description = "Question not found", content = @Content)
-    @GetMapping("/{questionId}/answers")
-    public ResponseEntity<ApiResponseDto> getAnswersForQuestion(@PathVariable Long questionId) {
-        log.info(StringConstants.METHOD_START, "getAnswersForQuestion");
-        List<AnswerDto> answers = questionService.getAnswersForQuestion(questionId);
-        log.info(StringConstants.METHOD_END, "getAnswersForQuestion");
-        return ApiResponseDto.generateResponse(HttpStatus.OK, answers, "Answers retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
-    }
+//    @Operation(summary = "Get all answers for a question", description = "Retrieve all answers submitted for a specific question.")
+//    @ApiResponse(responseCode = "200", description = "Answers retrieved successfully", content = @Content(schema = @Schema(implementation = AnswerDto.class)))
+//    @ApiResponse(responseCode = "404", description = "Question not found", content = @Content)
+//    @GetMapping("/{questionId}/answers")
+//    public ResponseEntity<ApiResponseDto> getAnswersForQuestion(@PathVariable Long questionId) {
+//        log.info(StringConstants.METHOD_START, "getAnswersForQuestion");
+//        List<AnswerDto> answers = questionService.getAnswersForQuestion(questionId);
+//        log.info(StringConstants.METHOD_END, "getAnswersForQuestion");
+//        return ApiResponseDto.generateResponse(HttpStatus.OK, answers, "Answers retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+//    }
 }

@@ -13,6 +13,8 @@ public interface OptionConverter {
 
     Option optionRequestDtoToOption(OptionRequestDto optionRequestDto);
 
+    Option optionRequestDtoToOption(OptionRequestDto optionRequestDto, Option option);
+
     OptionResponseDto optionToOptionResponseDto(Option option);
 
 

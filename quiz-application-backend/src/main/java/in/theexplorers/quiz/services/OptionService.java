@@ -19,15 +19,15 @@ public interface OptionService {
      * @param id the ID of the option to retrieve.
      * @return the OptionDto representing the option details.
      */
-    OptionDto getOptionById(Long id);
+    OptionResponseDto getOptionById(Long id);
 
     /**
      * Updates an existing option by its ID.
      *
      * @param id        the ID of the option to update.
-     * @param optionDto the updated data for the option.
-     * @return the updated OptionDto representing the updated option details.
+     * @param optionRequestDto the updated data for the option.
+     * @return the updated OptionResponseDto representing the updated option details.
      */
-    OptionDto updateOptionById(Long id, OptionDto optionDto);
+    OptionResponseDto updateOptionById(Long id, OptionRequestDto optionRequestDto);
 }
 

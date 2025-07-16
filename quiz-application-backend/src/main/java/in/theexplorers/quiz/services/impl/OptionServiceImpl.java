@@ -1,6 +1,5 @@
 package in.theexplorers.quiz.services.impl;
 
-import in.theexplorers.quiz.dtos.common.OptionDto;
 import in.theexplorers.quiz.dtos.request.OptionRequestDto;
 import in.theexplorers.quiz.dtos.response.OptionResponseDto;
 import in.theexplorers.quiz.entities.Option;
@@ -10,6 +9,7 @@ import in.theexplorers.quiz.repositories.OptionRepository;
 import in.theexplorers.quiz.repositories.QuestionRepository;
 import in.theexplorers.quiz.services.OptionService;
 import in.theexplorers.quiz.utilities.converters.OptionConverter;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +47,12 @@ public class OptionServiceImpl implements OptionService {
         return optionConverter.optionToOptionResponseDto(option);
     }
 
+    @Transactional
     @Override
     public void deleteOptionById(Long optionId) {
+        if (!optionRepository.existsById(optionId)) {
+            throw new ResourceNotFoundException("Option not found with ID: " + optionId);
+        }
         optionRepository.deleteById(optionId);
     }
 
@@ -56,38 +60,37 @@ public class OptionServiceImpl implements OptionService {
      * Fetches an Option by its ID and converts it to OptionDto.
      *
      * @param id the ID of the option to retrieve.
-     * @return the OptionDto representing the option details.
+     * @return the OptionResponseDto representing the option details.
      * @throws ResourceNotFoundException if the option with the given ID does not exist.
      */
-    public OptionDto getOptionById(Long id) {
+    public OptionResponseDto getOptionById(Long id) {
         // Find the option by ID, throw an exception if not found
         Option option = optionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Option not found with id: " + id));
 
         // Convert the Option entity to a DTO and return
-        return optionConverter.optionToOptionDto(option);
+        return optionConverter.optionToOptionResponseDto(option);
     }
 
     /**
      * Updates an existing option by its ID.
      *
-     * @param id        the ID of the option to update.
-     * @param optionDto the updated data for the option.
-     * @return the updated OptionDto representing the updated option details.
+     * @param id               the ID of the option to update.
+     * @param optionRequestDto the updated data for the option.
+     * @return the updated OptionResponseDto representing the updated option details.
      * @throws ResourceNotFoundException if the option with the given ID does not exist.
      */
-    public OptionDto updateOptionById(Long id, OptionDto optionDto) {
+    @Override
+    public OptionResponseDto updateOptionById(Long id, OptionRequestDto optionRequestDto) {
         // Find the existing option by ID, or throw an exception if not found
         Option existingOption = optionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Option not found with id: " + id));
 
         // Update the fields of the existing option entity
-        existingOption.setText(optionDto.getText());
-        existingOption.setIsCorrect(optionDto.getIsCorrect());
-
+        optionConverter.optionRequestDtoToOption(optionRequestDto, existingOption);
         // Save the updated option entity to the database
         Option updatedOption = optionRepository.save(existingOption);
 
         // Convert the updated entity to OptionDto and return it
-        return optionConverter.optionToOptionDto(updatedOption);
+        return optionConverter.optionToOptionResponseDto(updatedOption);
     }
 }
 

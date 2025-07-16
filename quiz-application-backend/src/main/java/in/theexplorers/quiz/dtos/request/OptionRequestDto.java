@@ -3,6 +3,7 @@ package in.theexplorers.quiz.dtos.request;
  * Copyright (c) 2024 TheExplorers.
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,12 @@ public class OptionRequestDto {
     @Schema(description = "Text of the option", example = "Paris")
     private String text;
 
+    @JsonProperty("isCorrect")
     @Schema(description = "Indicates if this is the correct answer", example = "true", defaultValue = "false")
     private boolean isCorrect;
+
+    @JsonProperty("isActive")
+    @Schema(description = "Indicates if this is active", example = "true", defaultValue = "true")
+    private boolean isActive;
 }
 

@@ -30,6 +30,10 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("SELECT q FROM Question q WHERE q.quiz.id = :quizId")
     List<Question> findByQuizId(@Param("quizId") Long quizId);
 
+    /**
+     *
+     * @param questionId
+     */
     @Modifying
     @Query("UPDATE Question q SET q.isActive = false WHERE q.id = :questionId")
     void deleteById(@Param("questionId") Long questionId);

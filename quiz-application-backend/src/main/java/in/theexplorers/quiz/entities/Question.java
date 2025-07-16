@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -31,7 +31,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Represents the question of the  quiz")
 @Table(name = "question")
 public class Question {
 
@@ -40,14 +39,12 @@ public class Question {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Unique identifier for each question record.")
     private Long id;
 
     /**
      * Text content of the question, with a maximum length of 500 characters.
      */
     @Column(nullable = false, length = 500)
-    @Schema(description = "Text content of the question.", example = "What is the capital of France?", maxLength = 500)
     private String text;
 
     /**
@@ -55,28 +52,30 @@ public class Question {
      */
     @ManyToOne
     @JoinColumn(name = "quiz_id", nullable = false)
-    @Schema(description = "The quiz to which this question belongs.")
     private Quiz quiz;
 
     /**
      * List of possible answer options associated with this question.
      */
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Schema(description = "List of possible answer options associated with this question.")
     private List<Option> options;
+
+    /**
+     * List of answer for the particular question
+     */
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers;
 
     /**
      * Indicates whether the question is active. Default is true.
      */
     @Builder.Default
-    @Schema(description = "Indicates whether the question is active. Default is true.", defaultValue = "true")
     private Boolean isActive = true;
 
     /**
      * Username of the user who created this record, non-updatable.
      */
     @Column(nullable = false, updatable = false)
-    @Schema(description = "Username of the user who created this record.", example = "admin")
     private String createdBy;
 
     /**
@@ -91,14 +90,12 @@ public class Question {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
-    @Schema(description = "Timestamp indicating when the question record was created.")
-    private Date createdDate;
+    private LocalDateTime createdOn;
 
     /**
      * Timestamp indicating when the question record was last updated.
      */
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Schema(description = "Timestamp indicating when the question record was last updated.")
-    private Date updatedDate;
+    private LocalDateTime updatedOn;
 }

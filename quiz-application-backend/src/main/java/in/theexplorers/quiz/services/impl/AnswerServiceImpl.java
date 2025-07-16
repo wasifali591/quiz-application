@@ -120,7 +120,7 @@ public class AnswerServiceImpl implements AnswerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Answer with ID " + id + " not found."));
 
         // Update the fields of the existing answer entity using the provided DTO
-        existingAnswer.setSelectedAnswer(answerDto.getSelectedAnswer());
+//        existingAnswer.setSelectedAnswer(answerDto.getSelectedAnswer());
         existingAnswer.setIsActive(answerDto.getIsActive());
 
         // Save the updated entity back to the repository

@@ -3,10 +3,10 @@ package in.theexplorers.quiz.controllers;
  * Copyright (c) 2024 TheExplorers.
  */
 
-import in.theexplorers.quiz.dtos.common.OptionDto;
+import in.theexplorers.quiz.dtos.request.OptionRequestDto;
 import in.theexplorers.quiz.dtos.response.ApiResponseDto;
+import in.theexplorers.quiz.dtos.response.OptionResponseDto;
 import in.theexplorers.quiz.services.OptionService;
-import in.theexplorers.quiz.utilities.DateTimeUtility;
 import in.theexplorers.quiz.utilities.StringConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,17 +51,16 @@ public class OptionController {
     @ApiResponse(responseCode = "404", description = "Option not found")
     public ResponseEntity<ApiResponseDto> getOptionById(@PathVariable Long id) {
         log.info(StringConstants.METHOD_START, "getOptionById");
-        OptionDto option = optionService.getOptionById(id);
+        OptionResponseDto option = optionService.getOptionById(id);
         log.info(StringConstants.METHOD_END, "getOptionById");
-        return ApiResponseDto.generateResponse(
-                HttpStatus.OK, option, "Option retrieved successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, option, "Option retrieved successfully", LocalDateTime.now());
     }
 
     /**
      * Updates an existing option by its ID.
      *
-     * @param id        the ID of the option to update.
-     * @param optionDto the updated option details.
+     * @param id               the ID of the option to update.
+     * @param optionRequestDto the updated option details.
      * @return the updated OptionDto.
      */
     @PutMapping("/{id}")
@@ -69,12 +68,11 @@ public class OptionController {
     @ApiResponse(responseCode = "200", description = "Option updated successfully")
     @ApiResponse(responseCode = "404", description = "Option not found")
     @ApiResponse(responseCode = "400", description = "Invalid input data")
-    public ResponseEntity<ApiResponseDto> updateOptionById(@PathVariable Long id, @RequestBody OptionDto optionDto) {
+    public ResponseEntity<ApiResponseDto> updateOptionById(@PathVariable Long id, @RequestBody OptionRequestDto optionRequestDto) {
         log.info(StringConstants.METHOD_START, "updateOptionById");
-        OptionDto updatedOption = optionService.updateOptionById(id, optionDto);
+        OptionResponseDto updatedOption = optionService.updateOptionById(id, optionRequestDto);
         log.info(StringConstants.METHOD_END, "updateOptionById");
-        return ApiResponseDto.generateResponse(
-                HttpStatus.OK, updatedOption, "Option updated successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, updatedOption, "Option updated successfully", LocalDateTime.now());
     }
 
     /**
@@ -91,8 +89,7 @@ public class OptionController {
         log.info(StringConstants.METHOD_START, "deleteOptionById");
         optionService.deleteOptionById(id);
         log.info(StringConstants.METHOD_END, "deleteOptionById");
-        return ApiResponseDto.generateResponse(
-                HttpStatus.OK, null, "Option deleted successfully", LocalDateTime.parse(DateTimeUtility.getCurrentTimestamp()));
+        return ApiResponseDto.generateResponse(HttpStatus.OK, null, "Option deleted successfully", LocalDateTime.now());
     }
 }
 

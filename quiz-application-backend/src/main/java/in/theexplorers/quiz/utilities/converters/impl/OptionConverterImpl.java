@@ -44,6 +44,17 @@ public class OptionConverterImpl implements OptionConverter {
     }
 
     /**
+     * @param optionRequestDto
+     * @param option
+     * @return
+     */
+    @Override
+    public Option optionRequestDtoToOption(OptionRequestDto optionRequestDto, Option option) {
+        modelMapper.map(optionRequestDto, option);
+        return option;
+    }
+
+    /**
      * @param option
      * @return
      */
